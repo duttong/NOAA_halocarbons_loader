@@ -89,7 +89,7 @@ class HATS_MSD_URLs:
 
 class insitu_URLs:
     """ There have been two in situ halocarbon measurement programs in NOAA/GML
-        The RITG program: https://www.esrl.noaa.gov/gmd/hats/insitu/insitu.html
+        The RITS program: https://www.esrl.noaa.gov/gmd/hats/insitu/insitu.html
         followd by the CATS program: https://www.esrl.noaa.gov/gmd/hats/insitu/cats/
         Both programs made about hourly measurements at 5 stations. CATS also made
         measurements at Summit, Greenland (sum) """
