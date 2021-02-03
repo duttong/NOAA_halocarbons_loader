@@ -6,7 +6,7 @@
     There are several measurement programs for halocarbon data. The loader
     method in the class HATS_Loader will return monthly mean flask data
     measured on the M3 mass spectrometer instrument. To select data from a
-    different measurement program use the 'prog' key word. Valid flask measurement
+    different measurement program use the 'program' key word. Valid flask measurement
     programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ
     measurements.
 
