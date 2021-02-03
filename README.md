@@ -63,6 +63,5 @@ df['mf']['spo'].plot()
 plt.show()
 ```
 
-<h2>TODO:<\h2>
-  
-  <p>I still need to add some measurement programs (otto, oldgc, and combined data product).</p>
+<h2>TODO:</h2>
+<p>I still need to add some measurement programs (otto, oldgc, and combined data product).</p>
