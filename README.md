@@ -10,7 +10,7 @@
 
 <h3>Examples:</h3>
 
-```
+```python
 import halocarbons_loader
 hats = halocarbons_loader.HATS_Loader()
 df = hats.loader('F11')
@@ -37,12 +37,12 @@ thd  2018-11-01  229.883333  0.0700
 ```
 
 <h3>To load in situ data from the CATS program try:</h3>
-```
+
+```python
+import halocarbons_loader
+hats = halocarbons_loader.HATS_Loader()
+
 df = hats.loader('F11', program='CATS')
-Loading data for F11
-File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask.txt
-Please consult the header in the file listed above for PI and contact information.
->>> df = hats.loader('F11', program='CATS')
 Loading data for F11
 File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/brw_F11_MM.dat
 File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/nwr_F11_MM.dat
@@ -54,7 +54,8 @@ Please consult the header in the files listed above for PI and contact informati
 ```
 
 <h3>Working with Pandas multi-index.</h3>
-```
+
+```python
 import matplotlib.pyplot as plt
 
 df['mf']['brw'].plot()
@@ -63,4 +64,5 @@ plt.show()
 ```
 
 <h2>TODO:<\h2>
-  I still need to add some measurement programs (otto, oldgc, and combined data product).
+  
+  <p>I still need to add some measurement programs (otto, oldgc, and combined data product).</p>
