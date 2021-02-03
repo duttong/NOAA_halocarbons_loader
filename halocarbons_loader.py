@@ -12,7 +12,9 @@
 
     The 'freq' key word is short for measurement frequence. All programs return
     monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the
-    in situ measurement programs. """
+    in situ measurement programs.
+
+    TODO: add 'oldgc', 'otto', and the combinded data sets to the loader. """
 
 import pandas as pd
 from datetime import datetime
