@@ -1,4 +1,4 @@
-<h3>NOAA Global Monitoring Laboratory (GML) Halocarbon data loader</h3>
+<h2>NOAA Global Monitoring Laboratory (GML) Halocarbon data loader</h2>
   
 <p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: ftp://ftp.cmdl.noaa.gov/hats</p>
 
@@ -8,7 +8,7 @@
 
 <p>The loader returns a Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
 
-<p>Examples:
+<h3>Examples:</h3>
 
 ```
 import halocarbons_loader
@@ -34,5 +34,33 @@ thd  2018-11-01  229.883333  0.0700
      2019-03-01  228.695000  0.0700
 
 [1536 rows x 2 columns]
-
 ```
+
+<h3>To load in situ data from the CATS program try:</h3>
+```
+df = hats.loader('F11', program='CATS')
+Loading data for F11
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask.txt
+Please consult the header in the file listed above for PI and contact information.
+>>> df = hats.loader('F11', program='CATS')
+Loading data for F11
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/brw_F11_MM.dat
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/nwr_F11_MM.dat
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/mlo_F11_MM.dat
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/smo_F11_MM.dat
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/spo_F11_MM.dat
+File URL: ftp://ftp.cmdl.noaa.gov/hats/cfcs/cfc11/insituGCs/CATS/monthly/sum_F11_MM.dat
+Please consult the header in the files listed above for PI and contact information.
+```
+
+<h3>Working with Pandas multi-index.</h3>
+```
+import matplotlib.pyplot as plt
+
+df['mf']['brw'].plot()
+df['mf']['spo'].plot()
+plt.show()
+```
+
+<h2>TODO:<\h2>
+  I still need to add some measurement programs (otto, oldgc, and combined data product).
