@@ -98,7 +98,7 @@ class insitu_URLs:
         self.prog = prog.upper()
 
         self.sites = ['brw', 'nwr', 'mlo', 'smo', 'spo']
-        if prog == 'CATS':
+        if self.prog == 'CATS':
             self.sites.append('sum')    # additional site for CATS
 
         self.gases = list(self.urls('mlo').keys())
