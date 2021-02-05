@@ -1,4 +1,4 @@
-<h2>NOAA Global Monitoring Laboratory (GML) Halocarbon data loader</h2>
+<h2>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h2>
   
 <p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: ftp://ftp.cmdl.noaa.gov/hats</p>
 
