@@ -95,7 +95,7 @@ class insitu_URLs:
         measurements at Summit, Greenland (sum) """
 
     def __init__(self, prog='CATS'):
-        self.prog = prog
+        self.prog = prog.upper()
 
         self.sites = ['brw', 'nwr', 'mlo', 'smo', 'spo']
         if prog == 'CATS':
