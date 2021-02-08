@@ -34,11 +34,15 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         """ converts a gas string to the correct upper and lower case. The dict
             good contains the correct cases. Returns all caps if not in dict. """
 
-        good = {'CCL4': 'CCl4', 'CHCL3': 'CHCl3', 'CH3CL': 'CH3Cl', 'CH3CL': 'CH3Cl',
-            'CH3BR': 'CH3Br', 'HFC142B': 'HFC142b', 'H1211': 'h1211', 'COS': 'OCS',
+        good = {'F11B': 'F11', 'CCL4': 'CCl4', 'CHCL3': 'CHCl3', 'CH3CL': 'CH3Cl',
+            'COS': 'OCS',
+            'CH3CL': 'CH3Cl', 'CH3BR': 'CH3Br',
+            'HCFC141B': 'HCFC141b', 'HCFC142B': 'HCFC142b',
             'F134A': 'HFC134a', 'HFC134A': 'HFC134a', 'HFC365MFC': 'HFC365mfc',
-            'HFC227EA': 'HFC227ea', 'F11B': 'F11',
-            'H1211': 'h1211', 'H1301': 'h1301', 'H2402': 'h2402'}
+            'HFC227EA': 'HFC227ea', 'HFC236FA': 'HFC236fa',
+            'H1211': 'h1211', 'H1301': 'h1301', 'H2402': 'h2402',
+            'I-BUTANE': 'i-butane', 'N-BUTANE': 'n-butane', 'I-PENTANE': 'i-pentane',
+            'N-PENTANE': 'n-pentane', 'N-HEXANE': 'n-hexane'}
 
         if gas.upper() in good:
             return good[gas.upper()]
