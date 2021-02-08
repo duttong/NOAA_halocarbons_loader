@@ -24,10 +24,11 @@ import halocarbon_urls
 from gapfill import Gap_Methods
 
 
-class HATS_Loader():
+class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
     def __init__(self):
-        pass
+        super().__init__()
+        self.gases = self.urls.keys()
 
     def gas_conversion(self, gas):
         """ converts a gas string to the correct upper and lower case. The dict
@@ -115,19 +116,17 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         df = df.reset_index('site').groupby('site').resample('MS').mean().reset_index().set_index(['site', 'date'])
 
         if gapfill:
-            # from time import time
-            # t0 = time()
+            from time import time
+            t0 = time()
             sites = set(df.reset_index()['site'])
-            pool = mp.Pool()
-            res = pool.starmap(self.gapfiller, [(df, s) for s in sites])
-            pool.close()
-            pool.join()
+            with mp.Pool() as p:
+                res = p.starmap(self.gapfiller, [(df, s) for s in sites])
 
             df = pd.concat(res)
             df.reset_index(inplace=True)
             df.set_index(['site', 'date'], inplace=True)
             df.sort_index(inplace=True)
-            # print(time()-t0)
+            print(f'gapfiller took {time()-t0:.1f} seconds')
 
         return df
 
@@ -151,7 +150,7 @@ class insitu(halocarbon_urls.insitu_URLs):
         self.prog = prog.upper()
         self.mp_processes = 3
 
-    def pandas_csv_reader(self, gas, freq, site):
+    def insitu_csv_reader(self, gas, freq, site):
         urls = self.urls(site, freq=freq)
         url = urls[gas]
 
@@ -201,11 +200,9 @@ class insitu(halocarbon_urls.insitu_URLs):
             print(f'Loading data for {gas}')
 
         # processes can't be too large or ftp server complains
-        pool = mp.Pool(processes=self.mp_processes)
-        # step through each insitu site.
-        res = pool.starmap(self.pandas_csv_reader, [(gas, freq, s) for s in self.sites])
-        pool.close()
-        pool.join()
+        with mp.Pool(processes=self.mp_processes) as p:
+            # step through each insitu site.
+            res = p.starmap(self.insitu_csv_reader, [(gas, freq, s) for s in self.sites])
 
         # create a single dataframe
         df = pd.concat(res)
