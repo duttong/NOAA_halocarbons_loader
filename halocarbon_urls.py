@@ -67,8 +67,10 @@ class HATS_MSD_URLs:
         u['HCFC124'] = f'{baseftp}/PERSEUS/HCFC-124_PR1_MS_flask.txt'
         u['HCFC133a'] = f'{baseftp}/PERSEUS/HCFC-133a_PR1_MS_flask.txt'
         u['HFC125'] = f'{baseftp}/PERSEUS/HFC-125_PR1_MS_flask.txt'
+        # use the M2 + PR1 file for HFC143a
         # u['HFC143a'] = f'{baseftp}/PERSEUS/HFC-143a_PR1_MS_flask.txt'
-        u['HFC23'] = f'{baseftp}/PERSEUS/HFC-23_PR1_MS_flask.txt'
+        # removed HFC23
+        # u['HFC23'] = f'{baseftp}/PERSEUS/HFC-23_PR1_MS_flask.txt'
         u['HFC32'] = f'{baseftp}/PERSEUS/HFC-32_PR1_MS_flask.txt'
         u['HFO1234yf'] = f'{baseftp}/PERSEUS/HFO-1234yf_PR1_MS_flask.txt'
         u['HFO1234ze'] = f'{baseftp}/PERSEUS/HFO-1234ze_PR1_MS_flask.txt'
