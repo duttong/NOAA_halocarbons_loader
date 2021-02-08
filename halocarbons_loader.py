@@ -28,7 +28,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
     def __init__(self):
         super().__init__()
-        self.gases = self.urls.keys()
+        self.gases = list(self.urls.keys())
 
     def gas_conversion(self, gas):
         """ converts a gas string to the correct upper and lower case. The dict
