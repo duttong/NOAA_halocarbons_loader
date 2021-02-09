@@ -28,26 +28,30 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
     def __init__(self):
         super().__init__()
-        self.gases = list(self.urls.keys())
+        self.gases = self.urls.keys()
 
     def gas_conversion(self, gas):
         """ converts a gas string to the correct upper and lower case. The dict
-            good contains the correct cases. Returns all caps if not in dict. """
+            subs are substitutions or commonly used aliases. """
 
-        good = {'F11B': 'F11', 'CCL4': 'CCl4', 'C2CL4': 'C2Cl4', 'CH2CL2': 'CH2Cl2',
-            'CHCL3': 'CHCl3', 'CH3CCL3': 'CH3CCl3', 'MC': 'CH3CC;3', 'COS': 'OCS',
-            'CH3CL': 'CH3Cl', 'CH3BR': 'CH3Br',
-            'HCFC141B': 'HCFC141b', 'HCFC142B': 'HCFC142b', 'HCFC133A': 'HCFC133a',
-            'F134A': 'HFC134a', 'HFC134A': 'HFC134a', 'HFC143A': 'HFC143a', 'HFC152A': 'HFC152a',
-            'HFC365MFC': 'HFC365mfc', 'HFC227EA': 'HFC227ea', 'HFC236FA': 'HFC236fa',
-            'H1211': 'h1211', 'H1301': 'h1301', 'H2402': 'h2402',
-            'HFO1234YF': 'HFO1234yf', 'HFO1234ZE': 'HFO1234ze',
-            'I-BUTANE': 'i-butane', 'N-BUTANE': 'n-butane', 'I-PENTANE': 'i-pentane',
-            'N-PENTANE': 'n-pentane', 'N-HEXANE': 'n-hexane'}
+        subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', '1211': 'h1211'}
 
-        if gas.upper() in good:
-            return good[gas.upper()]
-        return gas.upper()
+        # first compare to substitutions
+        if gas.upper() in subs:
+            proper = subs[gas.upper()]
+        # now compare to the gases in the urls key
+        elif gas.casefold() in (g.casefold() for g in self.gases):
+            proper = self._casecompare(gas)
+        else:
+            print(f'NOAA/GML does not measure {gas}')
+            proper = ''
+        return proper
+
+    def _casecompare(self, gas):
+        """ Returns the correct case as it appears in self.gases """
+        for g in self.gases:
+            if gas.casefold() == g.casefold():
+                return g
 
     def loader(self, gas, **kwargs):
         """ Main loader method. """
