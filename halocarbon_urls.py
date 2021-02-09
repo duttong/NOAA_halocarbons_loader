@@ -137,6 +137,7 @@ class Combined_Data_URLs:
         u['F11'] = f'{baseftp}/cfcs/cfc11/combined/HATS_global_F11.txt'
         u['F12'] = f'{baseftp}/cfcs/cfc12/combined/HATS_global_F12.txt'
         u['F113'] = f'{baseftp}/cfcs/cfc113/combined/HATS_global_F113.txt'
-        u['N2O'] = f'{baseftp}/n2o/combined/HATS_global_N2O.txt'
-        u['SF6'] = f'{baseftp}/sf6/combined/HATS_global_SF6.txt'
+        u['CCl4'] = f'{baseftp}/solvents/CCl4/combined/HATS_global_CCl4.txt'
+        u['N2O'] = f'{baseftp}/n2o/combined/GML_global_N2O.txt'
+        u['SF6'] = f'{baseftp}/sf6/combined/GML_global_SF6.txt'
         return u

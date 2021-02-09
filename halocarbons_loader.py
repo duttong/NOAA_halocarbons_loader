@@ -14,7 +14,7 @@
     monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the
     in situ measurement programs.
 
-    TODO: add 'oldgc', 'otto', and the combinded data sets to the loader. """
+    TODO: add 'oldgc' and 'otto' flask data sets to the loader. """
 
 import pandas as pd
 from datetime import datetime
@@ -29,7 +29,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
     def __init__(self):
         super().__init__()
         # list of all gases available on FTP site
-        self.gases = self.urls.keys()
+        self.gases = list(self.urls.keys())
+        self.gases.append('N2O')
+        self.gases.append('CCl4')
+        self.gases = sorted(self.gases)
 
     def loader(self, gas, **kwargs):
         """ Main loader method. """
@@ -40,6 +43,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         freq = kwargs.get('freq', 'monthly')
         gapfill = kwargs.get('gapfill', False)
         verbose = kwargs.get('verbose', True)
+
+        if (gas == 'N2O' or gas == 'CCl4') & (program == 'MSD'):
+            print(f'The MSD program does not measure {gas} the returned cats_results are from the Combined Data Set.')
+            program = 'combined'
 
         if program.upper() in ['M3', 'PR1', 'MSD']:
             hats = MSDs(verbose=verbose)
@@ -52,7 +59,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             hats = insitu(verbose=verbose, prog=program)
             return hats.insitu_loader(gas, freq=freq)
 
-        elif program.upper() in ['COMBIND', 'COMBO']:
+        elif program.upper() in ['COMBINED', 'COMBO']:
             hats = Combined(verbose=verbose)
             return hats.combo_loader(gas)
 
@@ -60,7 +67,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         """ converts a gas string to the correct upper and lower case. The dict
             subs are substitutions or commonly used aliases. """
 
-        subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', '1211': 'h1211'}
+        # N2O and CCl4 are not in the self.gases list
+        subs = {'N2O': 'N2O', 'CCL4': 'CCl4', 'F11B': 'F11', 'COS': 'OCS',
+                'MC': 'CH3CCl3', 'CT': 'CCl4',
+                '1211': 'h1211'}
 
         # first compare to substitutions
         if gas.upper() in subs:
@@ -91,9 +101,9 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         try:
             filename = self.urls[gas]
         except KeyError:
-            print(f'Unknown gas name: {gas}')
+            print(f'The MSD program does not report data for: {gas}')
             print(f'Choose from: {sorted(list(self.urls.keys()))}')
-            quit()
+            return pd.DataFrame()
 
         if self.verbose:
             print(f'Loading data for {gas}')
@@ -124,6 +134,10 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
     def monthly(self, gas, gapfill=False):
         """ Monthly means calculated from flask pair means """
         df = self.pairs(gas)
+
+        # df is blank because MSD program doesn't measure the gas selected.
+        if df.shape[0] == 0:
+            return df
 
         # A monthly mean of these columns doesn't make sense. Dropping them.
         df = df.drop(['dec_date', 'wind_dir', 'wind_spd', 'flag', 'inst'], axis=1, errors='ignore')
