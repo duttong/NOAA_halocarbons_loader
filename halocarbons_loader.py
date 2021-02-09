@@ -13,8 +13,7 @@
     The 'freq' key word is short for measurement frequence. All programs return
     monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the
     in situ measurement programs.
-
-    TODO: add 'oldgc' and 'otto' flask data sets to the loader. """
+"""
 
 import pandas as pd
 from datetime import datetime
@@ -33,33 +32,46 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.gases.append('N2O')
         self.gases.append('CCl4')
         self.gases = sorted(self.gases)
+        self.gasloaded = ''
+        self.lats = {'brw': 71.3, 'sum': 72.5, 'nwr': 40.04, 'mlo': 19.5, 'smo': -14.3,
+                    'spo': -67.0, 'alt': 82.45, 'cgo': -40.68, 'kum': 19.52, 'mhd': 53.33,
+                    'psa': -64.92, 'thd': 41.05, 'lef': 45.95, 'ush': -54.87, 'hfm': 42.54,
+                    'gmi': 13.386, 'mid': 28.21, 'asc': -7.967, 'eic': -27.16}
+        # background air measurement sites
+        self.bk_sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
 
     def loader(self, gas, **kwargs):
         """ Main loader method. """
         gas = self.gas_conversion(gas)
+        self.gasloaded = gas
 
         # keywords used in loader with default values
         program = kwargs.get('program', 'MSD')
         freq = kwargs.get('freq', 'monthly')
         gapfill = kwargs.get('gapfill', False)
         verbose = kwargs.get('verbose', True)
+        program = program.upper()
 
         if (gas == 'N2O' or gas == 'CCl4') & (program == 'MSD'):
             print(f'The MSD program does not measure {gas} the returned cats_results are from the Combined Data Set.')
             program = 'combined'
 
-        if program.upper() in ['M3', 'PR1', 'MSD']:
+        if program in ['M3', 'PR1', 'MSD']:
             hats = MSDs(verbose=verbose)
             if freq == 'pairs':
                 return hats.pairs(gas)
             else:
                 return hats.monthly(gas, gapfill=gapfill)
 
-        elif program.upper() in ['CATS', 'RITS', 'INSITU']:
+        elif program in ['CATS', 'RITS', 'INSITU']:
             hats = insitu(verbose=verbose, prog=program)
             return hats.insitu_loader(gas, freq=freq)
 
-        elif program.upper() in ['COMBINED', 'COMBO']:
+        elif program in ['OTTO', 'OLDGC']:
+            hats = Flasks(verbose=verbose, prog=program)
+            return hats.flask_loader(gas, freq=freq)
+
+        elif program in ['COMBINED', 'COMBO']:
             hats = Combined(verbose=verbose)
             return hats.combo_loader(gas)
 
@@ -68,8 +80,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             subs are substitutions or commonly used aliases. """
 
         # N2O and CCl4 are not in the self.gases list
-        subs = {'N2O': 'N2O', 'CCL4': 'CCl4', 'F11B': 'F11', 'COS': 'OCS',
-                'MC': 'CH3CCl3', 'CT': 'CCl4',
+        subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', 'CT': 'CCl4',
                 '1211': 'h1211'}
 
         # first compare to substitutions
@@ -88,6 +99,23 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         for g in self.gases:
             if gas.casefold() == g.casefold():
                 return g
+
+    def mf_units(self, gas):
+        units = '(ppb)' if gas == 'N2O' else '(ppt)'
+        return units
+
+    def bk_sites_figure(self, df):
+        """ Plot the background air measurement sites. """
+        import matplotlib.pyplot as plt
+        dfsites = df.reset_index()['site'].unique()
+        for site in dfsites:
+            if site in self.bk_sites:
+                df['mf'][site].plot(label=site)
+
+        plt.legend()
+        plt.ylabel(f'{self.gasloaded} mole fraction {self.mf_units(self.gasloaded)}')
+        plt.title('Background Stations')
+        plt.show()
 
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
@@ -128,6 +156,7 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
             msd['site'] = msd['site'].str.lower()
 
         msd.reset_index(inplace=True)
+        self.sites = msd['site'].unique()
         msd.set_index(['site', 'date'], inplace=True)
         return msd
 
@@ -177,7 +206,6 @@ class insitu(halocarbon_urls.insitu_URLs):
     def __init__(self, verbose=True, prog='CATS'):
         super().__init__(prog)
         self.verbose = verbose
-        self.prog = prog.upper()
         self.mp_processes = 3
 
     def insitu_csv_reader(self, gas, freq, site):
@@ -237,6 +265,7 @@ class insitu(halocarbon_urls.insitu_URLs):
         # create a single dataframe
         df = pd.concat(res)
         df.reset_index(inplace=True)
+        self.sites = df['site'].unique()
         df.set_index(['site', 'date'], inplace=True)
         df.sort_index(inplace=True)
 
@@ -254,6 +283,68 @@ class insitu(halocarbon_urls.insitu_URLs):
             index_col='date')
         df.columns = [x.replace('insitu_', '') for x in df.columns]
         df.columns = [x.lower() for x in df.columns]
+        return df
+
+
+class Flasks(halocarbon_urls.Flask_GCECD_URLs):
+    """ Class for loading Flask data from the GML FTP server.
+    """
+
+    def __init__(self, verbose=True, prog='Otto'):
+        super().__init__(prog)
+        self.verbose = verbose
+        self.mp_processes = 3
+
+    def flask_csv_reader(self, gas, freq, site):
+        urls = self.urls(site, freq=freq)
+        url = urls[gas]
+
+        if self.verbose:
+            print(f'File URL: {url}')
+
+        if freq == 'monthly':
+            df = pd.read_csv(url, delim_whitespace=True, comment='#',
+                parse_dates={'date': [0, 1]}, infer_datetime_format=True,
+                index_col='date')
+            df.columns = ['mf', 'sd', 'n']
+
+        elif freq == 'hourly':
+            df = pd.read_csv(url, delim_whitespace=True, comment='#',
+                na_values=['Nan'],  # pandas use 'nan', added 'Nan' to na_values
+                parse_dates={'date': [0, 1, 2, 3, 4]},
+                date_parser=self.__dateParser_hourly,
+                index_col='date')
+            df.columns = ['mf', 'unc']
+
+        df['site'] = site       # add site column
+        return df
+
+    def flask_loader(self, gas, freq='monthly'):
+        """ Load Otto or OldGC data for all sites. This method uses
+            multiprocessing to simultaneously load files from the FTP site. """
+
+        if gas not in self.gases:
+            print(f'{self.prog} does not measure {gas}')
+            return
+
+        if self.verbose:
+            print(f'Loading data for {gas}')
+
+        # processes can't be too large or ftp server complains
+        with mp.Pool(processes=self.mp_processes) as p:
+            # step through each insitu site.
+            res = p.starmap(self.flask_csv_reader, [(gas, freq, s) for s in self.sites])
+
+        # create a single dataframe
+        df = pd.concat(res)
+        df.reset_index(inplace=True)
+        self.sites = df['site'].unique()
+        df.set_index(['site', 'date'], inplace=True)
+        df.sort_index(inplace=True)
+
+        if self.verbose:
+            print('Please consult the header in the files listed above for PI and contact information.')
+
         return df
 
 
@@ -283,5 +374,6 @@ class Combined(halocarbon_urls.Combined_Data_URLs):
 
         # make the Programs column a formated string field
         df['Programs'] = df['Programs'].astype(str).apply('{:0>6}'.format)
+        self.sites = ['alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo']
 
         return df

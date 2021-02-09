@@ -141,3 +141,35 @@ class Combined_Data_URLs:
         u['N2O'] = f'{baseftp}/n2o/combined/GML_global_N2O.txt'
         u['SF6'] = f'{baseftp}/sf6/combined/GML_global_SF6.txt'
         return u
+
+
+class Flask_GCECD_URLs:
+
+    def __init__(self, prog='Otto'):
+        self.sites = ['alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo']
+        self.prog = 'Otto' if prog.upper() == 'OTTO' else 'OldGC'
+        self.gases = list(self.urls('mlo').keys())
+
+    def urls(self, site, freq='monthly'):
+        """ URL generator for either Otto or OldGC programs """
+        site = site.lower()
+        freq = freq.lower()
+        suffix = {'hourly': 'All', 'monthly': 'MM'}
+
+        # OldGC only has monthly means
+        freq = 'monthly' if self.prog == 'OldGC' else freq
+
+        u = {}
+        # OldGC gases
+        u['F11'] = f'{baseftp}/cfcs/cfc11/flasks/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
+        u['F12'] = f'{baseftp}/cfcs/cfc12/flasks/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
+        u['N2O'] = f'{baseftp}/n2o/flasks/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
+
+        # addtional gases measured by Otto
+        if self.prog == 'Otto':
+            u['F113'] = f'{baseftp}/cfcs/cfc113/flasks/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
+            u['SF6'] = f'{baseftp}/sf6/flasks/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
+            u['CCl4'] = f'{baseftp}/solvents/CCl4/flasks/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
+            u['CH3CCl3'] = f'{baseftp}/solvents/CH3CCl3/flasks/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
+
+        return u

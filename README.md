@@ -1,5 +1,5 @@
 <h2>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h2>
-  
+
 <p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: ftp://ftp.cmdl.noaa.gov/hats</p>
 
 <p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the 'program' key word. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurements.</p>
@@ -62,6 +62,3 @@ df['mf']['brw'].plot()
 df['mf']['spo'].plot()
 plt.show()
 ```
-
-<h2>TODO:</h2>
-<p>I still need to add some measurement programs (otto, oldgc, and combined data product).</p>
