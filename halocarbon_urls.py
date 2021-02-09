@@ -124,3 +124,19 @@ class insitu_URLs:
             u['SF6'] = f'{baseftp}/sf6/insituGCs/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
 
         return u
+
+
+class Combined_Data_URLs:
+
+    def __init__(self):
+        self.urls = self.combo_urls()
+        self.gases = self.urls.keys()
+
+    def combo_urls(self):
+        u = {}
+        u['F11'] = f'{baseftp}/cfcs/cfc11/combined/HATS_global_F11.txt'
+        u['F12'] = f'{baseftp}/cfcs/cfc12/combined/HATS_global_F12.txt'
+        u['F113'] = f'{baseftp}/cfcs/cfc113/combined/HATS_global_F113.txt'
+        u['N2O'] = f'{baseftp}/n2o/combined/HATS_global_N2O.txt'
+        u['SF6'] = f'{baseftp}/sf6/combined/HATS_global_SF6.txt'
+        return u

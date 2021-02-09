@@ -28,7 +28,33 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
     def __init__(self):
         super().__init__()
+        # list of all gases available on FTP site
         self.gases = self.urls.keys()
+
+    def loader(self, gas, **kwargs):
+        """ Main loader method. """
+        gas = self.gas_conversion(gas)
+
+        # keywords used in loader with default values
+        program = kwargs.get('program', 'MSD')
+        freq = kwargs.get('freq', 'monthly')
+        gapfill = kwargs.get('gapfill', False)
+        verbose = kwargs.get('verbose', True)
+
+        if program.upper() in ['M3', 'PR1', 'MSD']:
+            hats = MSDs(verbose=verbose)
+            if freq == 'pairs':
+                return hats.pairs(gas)
+            else:
+                return hats.monthly(gas, gapfill=gapfill)
+
+        elif program.upper() in ['CATS', 'RITS', 'INSITU']:
+            hats = insitu(verbose=verbose, prog=program)
+            return hats.insitu_loader(gas, freq=freq)
+
+        elif program.upper() in ['COMBIND', 'COMBO']:
+            hats = Combined(verbose=verbose)
+            return hats.combo_loader(gas)
 
     def gas_conversion(self, gas):
         """ converts a gas string to the correct upper and lower case. The dict
@@ -53,26 +79,6 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             if gas.casefold() == g.casefold():
                 return g
 
-    def loader(self, gas, **kwargs):
-        """ Main loader method. """
-        gas = self.gas_conversion(gas)
-
-        # keywords used in loader with default values
-        program = kwargs.get('program', 'MSD')
-        freq = kwargs.get('freq', 'monthly')
-        gapfill = kwargs.get('gapfill', False)
-        verbose = kwargs.get('verbose', True)
-
-        if program.upper() in ['M3', 'PR1', 'MSD']:
-            hats = MSDs(verbose=verbose)
-            if freq == 'pairs':
-                return hats.pairs(gas)
-            else:
-                return hats.monthly(gas, gapfill=gapfill)
-        elif program.upper() in ['CATS', 'RITS', 'INSITU']:
-            hats = insitu(verbose=verbose, prog=program)
-            return hats.insitu_loader(gas, freq=freq)
-
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
 
@@ -89,13 +95,13 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
             print(f'Choose from: {sorted(list(self.urls.keys()))}')
             quit()
 
-        # determine file type "M3" or "PR1"
-        type = 'PR1' if filename.find('PR1') > 0 else 'GCMS'
-
         if self.verbose:
             print(f'Loading data for {gas}')
             print(f'File URL: {filename}')
             print('Please consult the header in the file listed above for PI and contact information.')
+
+        # determine file type "M3" or "PR1"
+        type = 'PR1' if filename.find('PR1') > 0 else 'GCMS'
 
         if type == 'GCMS':
             msd = pd.read_csv(filename, sep='\\s+', header=1,
@@ -103,6 +109,7 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
                 parse_dates={'date': [2, 3]},
                 index_col='date', na_values=['nd', '0.0'])
             msd['inst'] = 'M3'
+
         else:  # PR1 file type
             msd = pd.read_csv(filename, sep='\\s+', header=1, comment='#',
                 names=['site', 'dec_date', 'yyymmdd', 'hhmm', 'wind_dir', 'wind_spd', 'mf', 'sd', 'flag', 'inst'],
@@ -233,4 +240,34 @@ class insitu(halocarbon_urls.insitu_URLs):
             index_col='date')
         df.columns = [x.replace('insitu_', '') for x in df.columns]
         df.columns = [x.lower() for x in df.columns]
+        return df
+
+
+class Combined(halocarbon_urls.Combined_Data_URLs):
+
+    def __init__(self, verbose=True):
+        super().__init__()
+        self.verbose = verbose
+
+    def combo_loader(self, gas):
+        filename = self.urls[gas]
+
+        if self.verbose:
+            print(f'Loading data for {gas}')
+            print(f'File URL: {filename}')
+            print('Please consult the header in the file listed above for PI and contact information.')
+
+        df = pd.read_csv(filename, delim_whitespace=True, comment='#',
+            parse_dates={'date': [0, 1]}, infer_datetime_format=True,
+            index_col='date')
+
+        # shorten column names
+        df.columns = [x.replace('HATS_', '') for x in df.columns]
+        df.columns = [x.replace('GMD_', '') for x in df.columns]
+        df.columns = [x.replace(f'_{gas}', '') for x in df.columns]
+        df.columns = [x.replace(f'{gas}_', '') for x in df.columns]
+
+        # make the Programs column a formated string field
+        df['Programs'] = df['Programs'].astype(str).apply('{:0>6}'.format)
+
         return df
