@@ -152,7 +152,7 @@ class Flask_GCECD_URLs:
 
     def urls(self, site, freq='monthly'):
         """ URL generator for either Otto or OldGC programs """
-        site = site.lower()
+        site = site.lower() if self.prog == 'Otto' else site.upper()
         freq = freq.lower()
         suffix = {'hourly': 'All', 'monthly': 'MM'}
 
