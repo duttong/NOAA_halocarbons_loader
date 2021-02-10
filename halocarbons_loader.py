@@ -18,6 +18,7 @@
 import pandas as pd
 from datetime import datetime
 import multiprocessing as mp
+from time import time, sleep
 
 import halocarbon_urls
 from gapfill import Gap_Methods
@@ -29,7 +30,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         super().__init__()
         # list of all gases available on FTP site
         self.gases = list(self.urls.keys())
-        self.gases.append('N2O')
+        self.gases.append('N2O')    # add N2O and CCl4
         self.gases.append('CCl4')
         self.gases = sorted(self.gases)
         self.gasloaded = ''
@@ -39,6 +40,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                     'gmi': 13.386, 'mid': 28.21, 'asc': -7.967, 'eic': -27.16}
         # background air measurement sites
         self.bk_sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
+        self.programs_msd = ('m3', 'pr1', 'msd')
+        self.programs_insitu = ('rits', 'cats', 'insitu')
+        self.programs_flaskECD = ('oldgc', 'otto')
+        self.programs_combined = ('combined', 'combo')
 
     def loader(self, gas, **kwargs):
         """ Main loader method. """
@@ -46,37 +51,58 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.gasloaded = gas
 
         # keywords used in loader with default values
-        program = kwargs.get('program', 'MSD')
+        program = kwargs.get('program', 'msd')
         freq = kwargs.get('freq', 'monthly')
         gapfill = kwargs.get('gapfill', False)
         verbose = kwargs.get('verbose', True)
-        program = program.upper()
+        program = program.lower()
 
         if (gas == 'N2O' or gas == 'CCl4') & (program == 'MSD'):
             print(f'The MSD program does not measure {gas} the returned cats_results are from the Combined Data Set.')
             program = 'combined'
 
-        if program in ['M3', 'PR1', 'MSD']:
+        if program in self.programs_msd:
             hats = MSDs(verbose=verbose)
             if freq == 'pairs':
-                return hats.pairs(gas)
+                df = hats.pairs(gas)
             else:
-                return hats.monthly(gas, gapfill=gapfill)
+                df = hats.monthly(gas, gapfill=gapfill)
 
-        elif program in ['CATS', 'RITS', 'INSITU']:
+        elif program in self.programs_insitu:
             hats = insitu(verbose=verbose, prog=program)
-            return hats.insitu_loader(gas, freq=freq)
+            df = hats.insitu_loader(gas, freq=freq)
 
-        elif program in ['OTTO', 'OLDGC']:
+        elif program in self.programs_flaskECD:
             hats = Flasks(verbose=verbose, prog=program)
-            return hats.flask_loader(gas, freq=freq)
+            df = hats.flask_loader(gas, freq=freq)
 
-        elif program in ['COMBINED', 'COMBO']:
+        elif program in self.programs_combined:
             hats = Combined(verbose=verbose)
-            return hats.combo_loader(gas)
+            df = hats.combo_loader(gas)
+
+        else:
+            print(f'Unknown measurement program: {program}')
+            return
+
+        if gapfill and (freq == 'monthly'):
+            if program not in self.programs_combined:    # combined data already gapfilled
+                t0 = time()
+                sites = set(df.reset_index()['site'])
+                method = 'linear' if program == 'oldgc' else 'seasonal'
+                print(f'{method} gapfill started')
+                with mp.Pool() as p:
+                    res = p.starmap(self.gapfiller, [(df, s, method) for s in sites])
+
+                df = pd.concat(res)
+                df.reset_index(inplace=True)
+                df.set_index(['site', 'date'], inplace=True)
+                df.sort_index(inplace=True)
+                print(f'gapfiller took {time()-t0:.1f} seconds')
+
+        return df
 
     def gas_conversion(self, gas):
-        """ converts a gas string to the correct upper and lower case. The dict
+        """ Converts a gas string to the correct upper and lower case. The dict
             subs are substitutions or commonly used aliases. """
 
         # N2O and CCl4 are not in the self.gases list
@@ -116,6 +142,18 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         plt.ylabel(f'{self.gasloaded} mole fraction {self.mf_units(self.gasloaded)}')
         plt.title('Background Stations')
         plt.show()
+
+    def gapfiller(self, df, site, method='seasonal'):
+        gap = Gap_Methods()
+        sub_df = df.loc[site]
+        if 'mf' in sub_df.columns:
+            if method == 'seasonal':
+                sub_df = gap.robust_seasonal(sub_df, forecast=True)
+            elif method == 'linear':
+                sub_df = gap.linear(sub_df)
+        sub_df.rename_axis('date', inplace=True)
+        sub_df['site'] = site
+        return sub_df
 
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
@@ -174,29 +212,7 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         # resample pandas multiindex by site
         df = df.reset_index('site').groupby('site').resample('MS').mean().reset_index().set_index(['site', 'date'])
 
-        if gapfill:
-            from time import time
-            t0 = time()
-            sites = set(df.reset_index()['site'])
-            with mp.Pool() as p:
-                res = p.starmap(self.gapfiller, [(df, s) for s in sites])
-
-            df = pd.concat(res)
-            df.reset_index(inplace=True)
-            df.set_index(['site', 'date'], inplace=True)
-            df.sort_index(inplace=True)
-            print(f'gapfiller took {time()-t0:.1f} seconds')
-
         return df
-
-    def gapfiller(self, df, site):
-        gap = Gap_Methods()
-        sub_df = df.loc[site]
-        if 'mf' in sub_df.columns:
-            sub_df = gap.robust_seasonal(sub_df, forecast=True)
-        sub_df.rename_axis('date', inplace=True)
-        sub_df['site'] = site
-        return sub_df
 
 
 class insitu(halocarbon_urls.insitu_URLs):
@@ -206,7 +222,7 @@ class insitu(halocarbon_urls.insitu_URLs):
     def __init__(self, verbose=True, prog='CATS'):
         super().__init__(prog)
         self.verbose = verbose
-        self.mp_processes = 3
+        self.mp_processes = 2
 
     def insitu_csv_reader(self, gas, freq, site):
         urls = self.urls(site, freq=freq)
@@ -241,12 +257,15 @@ class insitu(halocarbon_urls.insitu_URLs):
             df.columns = ['mf', 'unc']
 
         df['site'] = site       # add site column
+
+        sleep(1)    # slow down, don't hammer the FTP site with requests
+
         return df
 
     def __dateParser_hourly(self, y, m, d, h, mn):
         return datetime(int(y), int(m), int(d), int(h), int(mn))
 
-    def insitu_loader(self, gas, freq='monthly'):
+    def insitu_loader(self, gas, freq='monthly', gapfill=False):
         """ Load CATS or RITS data for all sites. This method uses
             multiprocessing to simultaneously load files from the FTP site. """
 
@@ -293,7 +312,7 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
     def __init__(self, verbose=True, prog='Otto'):
         super().__init__(prog)
         self.verbose = verbose
-        self.mp_processes = 3
+        self.mp_processes = 2
 
     def flask_csv_reader(self, gas, freq, site):
         urls = self.urls(site, freq=freq)
@@ -317,6 +336,9 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
             df.columns = ['mf', 'unc']
 
         df['site'] = site       # add site column
+
+        sleep(1)    # slow down, don't hammer the FTP site with requests
+
         return df
 
     def flask_loader(self, gas, freq='monthly'):

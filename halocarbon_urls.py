@@ -144,6 +144,8 @@ class Combined_Data_URLs:
 
 
 class Flask_GCECD_URLs:
+    """ URLs for Otto and OldGC programs
+        When the FE3 instrument is online. Add to this class. """
 
     def __init__(self, prog='Otto'):
         self.sites = ['alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo']

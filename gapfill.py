@@ -9,6 +9,24 @@ from dateutil.relativedelta import relativedelta
 
 class Gap_Methods:
 
+    def linear(self, org_df, key='mf'):
+        """ Linear interpolation """
+
+        df = org_df.copy()
+
+        # first and last good points (skips over nans)
+        pt0 = df[key].first_valid_index()
+        pt1 = df[key].last_valid_index()
+        # find the column name of the 'sd' data.
+        sdkey = [s for s in df.columns if 'sd' in s]
+
+        df['gf'] = df[key]
+        df['gf'] = df['gf'][pt0:pt1].interpolate(method='time')
+        df['gfsd'] = df[sdkey]
+        df['gfsd'] = df.loc[pt0:pt1, sdkey].fillna(df[sdkey].median())
+
+        return df
+
     def seasonal(self, org_df, key='mf', forecast=False):
         """ Attempts to fit a seasonal ARIMAX model to a column (key) in a dataframe.  If the
             fit is successful, estimate a 12 month forecast and use the fit and forecast
@@ -16,7 +34,7 @@ class Gap_Methods:
         """
 
         df = org_df.copy()
-        
+
         # first and last good points (skips over nans)
         pt0 = df[key].first_valid_index()
         pt1 = df[key].last_valid_index()
@@ -30,7 +48,7 @@ class Gap_Methods:
         # force df.index to be inferred to prevent statsmodel warning (GSD 200226)
         df.index = pd.DatetimeIndex(df.index.values, freq=df.index.inferred_freq)
         mod = sm.tsa.statespace.SARIMAX(df[key][pt0:], order=(1, 1, 0), seasonal_order=(1, 1, 1, 12))
-        
+
         try:
             results = mod.fit(disp=0)
         except (ValueError, LinAlgError) as e:
@@ -70,11 +88,11 @@ class Gap_Methods:
 
         return df
 
-    
+
     def robust_seasonal(self, org_df, key='mf', forecast=False):
         """ This method handles data sets that have many nans in the first 16 months by running
             the SARIMAX model on reverse of the data and then inverting the results. """
-        
+
         df = self.seasonal(org_df, key=key)
         if df['gf'].max() > df[key].median() + df[key].std()*2:
             # print('inverting data')
@@ -82,9 +100,9 @@ class Gap_Methods:
             dfi = self.seasonal(df, key='invert')
             df['gf'] = dfi['gf'].values[::-1]
             df.drop(['invert'], inplace=True, axis=1)
-            
+
         if forecast:
             df2 = self.seasonal(org_df, key=key, forecast=True)
             df = pd.concat([df, df2['forecast']], axis=1)
-        
+
         return df
