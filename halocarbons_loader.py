@@ -107,7 +107,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
         # N2O and CCl4 are not in the self.gases list
         subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', 'CT': 'CCl4',
-                '1211': 'h1211'}
+                '1211': 'h1211', 'F134a': 'HFC134a'}
 
         # first compare to substitutions
         if gas.upper() in subs:
@@ -151,12 +151,16 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                 sub_df = gap.robust_seasonal(sub_df, forecast=True)
             elif method == 'linear':
                 sub_df = gap.linear(sub_df)
+            else:
+                pass
         sub_df.rename_axis('date', inplace=True)
         sub_df['site'] = site
         return sub_df
 
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
+    """ More info about the flask program can be found here:
+        https://www.esrl.noaa.gov/gmd/hats/flask/flasks.html """
 
     def __init__(self, verbose=True):
         super().__init__()
@@ -307,12 +311,13 @@ class insitu(halocarbon_urls.insitu_URLs):
 
 class Flasks(halocarbon_urls.Flask_GCECD_URLs):
     """ Class for loading Flask data from the GML FTP server.
-    """
+        More info about the flask program can be found here:
+        https://www.esrl.noaa.gov/gmd/hats/flask/flasks.html """
 
     def __init__(self, verbose=True, prog='Otto'):
         super().__init__(prog)
         self.verbose = verbose
-        self.mp_processes = 2
+        self.mp_processes = 2       # number of processors to use for FTP download
 
     def flask_csv_reader(self, gas, freq, site):
         urls = self.urls(site, freq=freq)
@@ -394,7 +399,7 @@ class Combined(halocarbon_urls.Combined_Data_URLs):
         df.columns = [x.replace(f'_{gas}', '') for x in df.columns]
         df.columns = [x.replace(f'{gas}_', '') for x in df.columns]
 
-        # make the Programs column a formated string field
+        # make the Programs column a formatted string field
         df['Programs'] = df['Programs'].astype(str).apply('{:0>6}'.format)
         self.sites = ['alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo']
 
