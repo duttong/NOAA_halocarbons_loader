@@ -103,7 +103,8 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
         # N2O and CCl4 are not in the self.gases list
         subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', 'CT': 'CCl4',
-                '1211': 'h1211', 'F134a': 'HFC134a'}
+                '1211': 'h1211', 'F134a': 'HFC134a',
+                'CFC11': 'F11', 'CFC12': 'F12', 'CFC113': 'F113'}
 
         # first compare to substitutions
         if gas.upper() in subs:
