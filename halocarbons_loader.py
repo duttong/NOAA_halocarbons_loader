@@ -45,19 +45,15 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.programs_flaskECD = ('oldgc', 'otto')
         self.programs_combined = ('combined', 'combo')
 
-    def loader(self, gas, **kwargs):
+    def loader(self, gas, program='msd', freq='monthly', gapfill=False, verbose=True):
         """ Main loader method. """
         gas = self.gas_conversion(gas)
         self.gasloaded = gas
 
-        # keywords used in loader with default values
-        program = kwargs.get('program', 'msd')
-        freq = kwargs.get('freq', 'monthly')
-        gapfill = kwargs.get('gapfill', False)
-        verbose = kwargs.get('verbose', True)
         program = program.lower()
+        freq = freq.lower()
 
-        if (gas == 'N2O' or gas == 'CCl4') & (program == 'MSD'):
+        if (gas == 'N2O' or gas == 'CCl4') & (program == 'msd'):
             print(f'The MSD program does not measure {gas} the returned cats_results are from the Combined Data Set.')
             program = 'combined'
 
