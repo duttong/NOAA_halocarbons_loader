@@ -2,6 +2,11 @@
 
 <p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: ftp://ftp.cmdl.noaa.gov/hats</p>
 
+<p>The current list of gases avaiable are: C2Cl4, C2H2, C2H6, C3H8, CCl4, CF4, CH2Cl2, CH3Br, CH3CCl3, CH3Cl, F11, F113,
+ F114, F115, F12, F13, HCFC123, HCFC124, HCFC133a, HCFC141b, HCFC142b, HCFC22, HFC125, HFC134a, HFC143a, HFC152a, HFC227ea,
+ HFC236fa, HFC32, HFC365mfc, HFO1234yf, HFO1234ze, N2O, NF3, OCS, PFC116, PFC218, SF6, SO2F2, h1211, h1301, h2402,
+ i-butane, i-pentane, n-butane, n-hexane, n-pentane</p>
+  
 <p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the 'program' key word. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurements.</p>
 
 <p>The 'freq' key word is short for measurement frequence. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
@@ -11,6 +16,8 @@
 <h3>Examples:</h3>
 
 ```python
+import pandas as pd
+
 import halocarbons_loader
 hats = halocarbons_loader.HATS_Loader()
 df = hats.loader('F11')
@@ -56,9 +63,14 @@ Please consult the header in the files listed above for PI and contact informati
 <h3>Working with Pandas multi-index.</h3>
 
 ```python
+import pandas as pd
 import matplotlib.pyplot as plt
 
 df['mf']['brw'].plot()
 df['mf']['spo'].plot()
+plt.show()
+
+# or use the cross section method (xs)
+df.xs('brw').mf.plot()
 plt.show()
 ```
