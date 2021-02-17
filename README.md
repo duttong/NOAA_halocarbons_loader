@@ -1,4 +1,4 @@
-<h2>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h2>
+<h1>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h1>
 
 <p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://www.esrl.noaa.gov/gmd/aftp/hats/</p>
 
@@ -12,6 +12,9 @@
 
 <h3>freq</h3>
 <p>The <strong>freq</strong> keyword is short for measurement frequence. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
+
+<h3>gapfill</h3>
+<p>When the gapfill keyword is set to True and the frequency of data (freq keyword) is 'monthly', a seasonally interpolation is done to fill any missing data. The dataframe returned will have five columns: mf, sd, model, gf, gfsd. Where the sesonal model is used to gapfill missing data. The gapfilled data is 'gf' in the dataframe.</p>
 
 <p>The loader returns a Python Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
 
