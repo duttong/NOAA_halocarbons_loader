@@ -7,12 +7,13 @@
  HFC236fa, HFC32, HFC365mfc, HFO1234yf, HFO1234ze, N2O, NF3, OCS, PFC116, PFC218, SF6, SO2F2, h1211, h1301, h2402,
  i-butane, i-pentane, n-butane, n-hexane, n-pentane</p>
  
-<h4>program keyword</h4>
-<p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the *program* key word. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurements. The 'combined' or 'combo' program can be used for the following gases: N2O, SF6, F11, F12, F113, CCl4.</p>
+<h3>program</h3>
+<p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the <strong>program</strong> keyword. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurement programs. The 'combined' or 'combo' program can be used for the following gases: N2O, SF6, F11, F12, F113, CCl4.</p>
 
-<p>The 'freq' key word is short for measurement frequence. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
+<h3>freq</h3>
+<p>The <strong>freq</strong> keyword is short for measurement frequence. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
 
-<p>The loader returns a Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
+<p>The loader returns a Python Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
 
 <h3>Examples:</h3>
 
