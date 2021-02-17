@@ -1,6 +1,6 @@
 <h2>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h2>
 
-<p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: ftp://ftp.cmdl.noaa.gov/hats</p>
+<p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://www.esrl.noaa.gov/gmd/aftp/hats/</p>
 
 <p>The current list of gases avaiable are: C2Cl4, C2H2, C2H6, C3H8, CCl4, CF4, CH2Cl2, CH3Br, CH3CCl3, CH3Cl, F11, F113,
  F114, F115, F12, F13, HCFC123, HCFC124, HCFC133a, HCFC141b, HCFC142b, HCFC22, HFC125, HFC134a, HFC143a, HFC152a, HFC227ea,
