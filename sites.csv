@@ -5,20 +5,24 @@ ABP,"Arembepe,  Bahia, Brazil",-12.77,-38.17,1.0
 ABQ,"Albuquerque,  New Mexico, United States",35.038,-106.6221,1617.0
 ABT,"Abbotsford,  British Columbia, Canada",49.0114,-122.3353,60.0
 ACG,"Alaska Coast Guard, United States",57.7366,-152.5042,6.0
+ACR,"Chestnut Ridge,  Tennessee, United States",35.9311,-84.3324,372.5
 ACV,"Canaan Valley,  West Virginia, United States",39.119,-79.4523,1026.0
 AFP,"Ameriflux,  Fort Peck,  Montana, United States",48.3079,-105.101,0.0
 AKD,"Akedala, China",47.1,87.93,562.0
+ALF,"Alta Floresta, Brazil",-8.92,-56.79,-9999.99
 ALT,"Alert,  Nunavut, Canada",82.4508,-62.5072,185.0
 AME,"Mead,  Nebraska, United States",41.1649,-96.4701,362.0
 AMS,"Amsterdam Island, France",-37.7983,77.5378,55.0
 AMT,"Argyle,  Maine, United States",45.0345,-68.6821,53.0
 AMY,"Anmyeon-do, Republic of Korea",36.539,126.329,47.0
+AOZ,"Missouri Ozark,  Missouri, United States",38.7441,-92.2,219.4
 APP,"Appalachian State, United States",36.2,-81.7,1100.0
 ARA,"Arcturus,  Queensland, Australia",-23.8587,148.4746,175.0
 ARH,"Arrival Heights,  Antarctica, New Zealand",-77.833,166.2,184.0
 ARL,"Arlington,  Virginia, United States",38.8917,-77.1317,111.0
 ARN,"El Arenosillo, Spain",37.1,-6.7333,41.0
 ARV,"Arvin,  CA, United States",35.239,-118.7887,158.0
+ASB,"Aline Skaggs Biology,  Salt Lake City,  UT, United States",40.7634,-111.8484,1426.5
 ASC,"Ascension Island, United Kingdom",-7.9667,-14.4,85.0
 ASK,"Assekrem, Algeria",23.2625,5.6322,2710.0
 AWS,"Germantown,  MD, United States",39.2005,-77.2631,161.0
@@ -30,6 +34,7 @@ BCK,"Behchoko,  Northwest Territories, Canada",62.7981,-115.9194,160.0
 BCS,"Baja California Sur, Mexico",23.3,-110.2,4.0
 BEA,"Beaverlodge,  Alberta, Canada",55.202,-119.3963,759.0
 BER,"Prospect Hill,  Bermuda, United Kingdom",32.3008,-64.766,60.0
+BGI,"Bradgate,  Iowa, United States",42.82,-94.41,355.1
 BGU,"Begur, Spain",41.97,3.23,11.0
 BHD,"Baring Head Station, New Zealand",-41.4083,174.871,85.0
 BII,"Biak, Indonesia",-1.1756,136.1006,3.0
@@ -42,6 +47,7 @@ BLK,"Baker Lake,  Nunavut, Canada",64.3317,-96.0104,51.0
 BMW,"Tudor Hill,  Bermuda, United Kingdom",32.2647,-64.8788,30.0
 BNA,"Nashville,  Tennessee, United States",36.2468,-86.562,182.0
 BND,"Bondville,  Illinois, United States",40.0519,-88.3731,230.0
+BNE,"Beaver Crossing,  Nebraska, United States",40.8,-97.18,465.9
 BOM,"Bombay, India",18.55,72.54,0.0
 BOS,"Table Mountain, United States",40.125,-105.2368,1689.0
 BRE,"Bremen, Germany",53.11,8.85,0.0
@@ -54,14 +60,17 @@ BSC,"Black Sea,  Constanta, Romania",44.1776,28.6647,0.0
 BSD,"Bilsdale, United Kingdom",54.359,-1.15,380.0
 BUC,"Bucktown,  MD, United States",38.4597,-76.043,3.0
 BVA,"Bluemont,  VA, United States",39.1379,-77.8326,486.0
+BWD,"Brentwood,  Maryland, United States",38.9343,-76.9556,16.8
 BZH,"Brittany Coast, France",48.58,-4.67,120.0
 CAK,"Akron,  Ohio, United States",40.9154,-81.4415,368.0
 CAL,"Calcutta, India",22.34,88.24,0.0
 CAR,"Briggsdale,  Colorado, United States",40.6347,-104.3269,1488.0
+CBA,"Cold Bay,  Alaska, United States",55.21,-162.72,21.34
 CBM,"Caribou,  Maine, United States",46.868,-68.013,191.0
 CBW,"Cabauw, Netherlands",51.9703,4.9264,0.0
 CBY,"Cambridge Bay,  Nunavut Territory, Canada",69.1284,-105.0577,35.0
 CDL,"Candle Lake,  Saskatchewan, Canada",53.9871,-105.1179,600.0
+CES,"Cesar,  Cabauw, the Netherlands",51.971,4.927,-1.0
 CFA,"Cape Ferguson,  Queensland, Australia",-19.28,147.057,2.0
 CGO,"Cape Grim,  Tasmania, Australia",-40.683,144.69,94.0
 CHA,"Chandigarh, India",30.42,76.54,0.0
@@ -89,6 +98,7 @@ DER,"Derwood,  MD, United States",39.1347,-77.1419,125.0
 DEU,"Deuselbach, Germany",49.77,7.05,480.0
 DHA,"Dhaka, India",23.85,90.4,0.0
 DNC,"Danbury,  NC, United States",36.3769,-80.3689,703.0
+DND,"Dahlen,  North Dakota, United States",47.5,-99.24,472.44
 DNH,"Durham,  NH, United States",43.7089,-72.1541,559.0
 DRA,"Desert Rock,  Nevada, United States",36.6237,-116.0195,1007.0
 DSI,"Dongsha Island, Taiwan",20.6992,116.7297,3.0
@@ -102,6 +112,8 @@ EGB,"Egbert,  Ontario, Canada",44.231,-79.7838,251.0
 EIC,"Easter Island, Chile",-27.1597,-109.4284,47.0
 ELA,"Experimental Lakes Area,  Ontario, Canada",49.6,-93.7,369.0
 ELL,"Estany Llong, Spain",42.5748,0.9545,2002.0
+ENA,"Eastern North Atlantic,  Graciosa,  Azores, Portugal",39.0916,-28.0257,30.48
+ERK,"Eureka, United States",80.08,-86.42,-9999.99
 ESP,"Estevan Point,   British Columbia, Canada",49.383,-126.5441,7.0
 EST,"Esther,  Alberta, Canada",51.6707,-110.206,707.0
 ETL,"East Trout Lake,  Saskatchewan, Canada",54.3541,-104.9868,493.0
@@ -118,6 +130,7 @@ FNE,"Fort Nelson,  British Columbia, Canada",58.8412,-122.5737,361.0
 FPK,"Fort Peck,  Montana, United States",48.3078,-105.1017,634.0
 FSD,"Fraserdale, Canada",49.8752,-81.57,210.0
 FTL,"Fortaleza, Brazil",-3.52,-38.28,3.0
+FWI,"Fairchild,  Wisconsin, United States",44.66,-90.96,334.3
 GAT,"Gartow, Germany",53.0657,11.4429,70.0
 GIC,"Sierra de Gredos, Spain",40.3457,-5.1755,1436.0
 GIF,"Gif sur Yvette, France",48.71,2.1475,160.0
@@ -135,11 +148,13 @@ HCT,"Hamden,  CT, United States",41.4337,-72.9452,204.0
 HEI,"Heidelberg, Germany",49.417,8.674,116.0
 HFM,"Harvard Forest,  Massachusetts, United States",42.5378,-72.1714,340.0
 HIH,"Hilo,  Hawaii, United States",19.717,-155.049,11.0
+HIL,"Homer,  Illinois, United States",40.07,-87.91,201.5
 HKG,"Hok Tsui, Hong Kong,  China",22.2094,114.2535,53.0
 HKO,"Hong Kong, China",22.22,114.25,0.0
 HNT,"Huntsville,  Alabama, United States",34.6782,-86.6864,202.0
 HNX,"Hanford,  California, United States",36.314,-119.632,73.0
 HOL,"Holloman,  NM, United States",32.8516,-106.1058,1241.0
+HOW,"Howland,  Maine, United States",42.2,-68.13,-9999.99
 HPB,"Hohenpeissenberg, Germany",47.8011,11.0245,936.0
 HRD,"Herndon,  VA, United States",38.9663,-77.3935,120.0
 HST,"Houston,  Texas, United States",29.72,-95.4,19.0
@@ -154,9 +169,11 @@ INU,"Inuvik, Northwest Territories, Canada",68.3178,-133.5342,113.0
 IPR,"Ispra, Italy",45.807,8.63,223.0
 ISK,"Iskrba, Slovenia",45.56,14.86,0.0
 ITN,"Grifton,  North Carolina, United States",35.365,-77.393,8.0
+IZO,"Izana,  Tenerife,  Canary Islands, Spain",28.309,-16.499,2372.9
 JES,"Jessup,  MD, United States",39.1723,-76.7765,67.0
 JFJ,"Jungfraujoch, Switzerland",46.55,7.987,3570.0
 JOU,"Joussard,  Alberta, Canada",55.341,-115.8952,665.0
+JPL,"Jet Propulsion Laboratory,  California, United States",34.202,-118.175,-9999.99
 JSA,"Jinsha, China",29.63,114.22,750.0
 KAS,"Kasprowy Wierch,  High Tatra, Poland",49.2325,19.9818,1989.0
 KCO,"Kaashidhoo, Republic of Maldives",4.97,73.47,1.0
@@ -170,6 +187,7 @@ KPA,"Kitt Peak,  Arizona, United States",32.0,-112.0,2083.0
 KRE,"Kresin u Pacova, Czech Republic",49.583,15.083,534.0
 KRN,"Kiruna, Sweden",67.86,20.23,530.0
 KRS,"Karasevoe, Russia",58.2456,82.4244,76.0
+KUM,"Cape Kumukahi,  Hawaii, United States",19.7371,-155.0116,0.3
 KWJ,"Kwajalein, Marshall Islands",8.715,167.723,10.0
 KZD,"Sary Taukum, Kazakhstan",44.0839,76.8712,595.0
 KZM,"Plateau Assy, Kazakhstan",43.25,77.88,2519.0
@@ -179,6 +197,7 @@ LCM,"Lacombe,  Alberta, Canada",52.4551,-113.7533,861.0
 LDR,"Lauder, New Zealand",-45.04,169.68,370.0
 LEF,"Park Falls,  Wisconsin, United States",45.9451,-90.2732,472.0
 LEW,"Lewisburg,  Pennsylvania, United States",40.9446,-76.8789,166.0
+LFS,"Longfengshan, China",44.73,127.6,330.5
 LIN,"Lindenberg, Germany",52.1663,14.1226,73.0
 LJO,"La Jolla,  California, United States",32.8669,-117.2572,10.0
 LLB,"Lac La Biche,  Alberta, Canada",54.9538,-112.4666,540.0
@@ -237,6 +256,7 @@ OBN,"Obninsk, Russia",55.11,36.6,183.0
 OBS,"Old Black Spruce,  Saskatchewan, Canada",53.987,-105.118,629.0
 OFR,"Fir,  Oregon, United States",44.6465,-123.5514,263.0
 OHP,"Haute Provence, France",43.9167,5.75,580.0
+OIL,"Oglesby,  Illinois, United States",41.28,-88.94,192.6
 OLI,"Oliktok Point,  Alaska, United  States",70.4953,-149.8869,2.0
 OMP,"Marys Peak,  Oregon, United States",44.5043,-123.553,1249.0
 OMT,"Metolius,  Oregon, United States",44.4524,-121.5572,1255.0
@@ -271,6 +291,7 @@ RBA,"Roof Butte,  Arizona, United States",36.4614,-109.0956,2982.0
 RCE,"Centerville,  Iowa, United States",40.7919,-92.8775,286.0
 RGL,"Ridge Hill, United Kingdom",51.9976,-2.54,204.0
 RGV,"Galesville,  Wisconsin, United States",44.091,-91.3382,251.0
+RIA,"Rowley,  Iowa, United States",42.4,-91.84,298.7
 RIC,"Richmond,  VA, United States",37.5088,-77.5761,104.0
 RK1,"Kermadec Island, Raoul Island ",-29.2,-177.9,2.0
 RKW,"Kewanee,  Illinois, United States",41.2762,-89.9724,247.0
@@ -289,8 +310,10 @@ SBR,"Salvador, Brazil",-12.77,-38.17,0.0
 SCA,"Offshore Charleston,  South Carolina, United States",32.77,-79.55,0.0
 SCE,"San Cristobal, Ecuador",-0.9041,-89.6143,8.0
 SCR,"San Jose, Costa Rica",9.98,-84.21,899.0
+SCT,"Beech Island,  South Carolina, United States",33.4057,-81.8334,115.2
 SDZ,"Shangdianzi, China",40.65,117.117,293.0
 SEA,"Seattle,  Washington, United States",47.68,-122.25,20.0
+SEL,"Seoul, Republic of Korea",37.5714,126.9658,85.8
 SEY,"Mahe Island, Seychelles",-4.6824,55.5325,2.0
 SFD,"Stafford,  VA, United States",38.4459,-77.53,77.0
 SGC,"Sierra de Grazalema, Spain",36.6956,-5.3975,850.0
@@ -319,6 +342,7 @@ STE,"Sterling,  Virginia, United States",38.98,-77.47,85.0
 STM,"Ocean Station M, Norway",66.0,2.0,0.0
 STP,"Ocean Station P, Canada",50.0,-145.0,7.0
 STR,"Sutro Tower,  San Francisco,  California, United States",37.7553,-122.4517,254.0
+SUM,"Summit, Greenland",72.5962,-38.422,3209.54
 SUR,"Surgut, Russia",61.2,73.2,40.0
 SUV,"Suva, Fiji",-18.0,178.0,0.0
 SVA,"Sterling,  Virginia, United States",38.98,-77.47,85.0
@@ -327,12 +351,14 @@ SVL,", United States",37.3962,-121.9846,0.0
 SVV,"Savvushka, Russia",51.325,82.1278,495.0
 SXF,"Sioux Falls,  South Dakota, United States",43.734,-96.6233,473.0
 SYO,"Syowa Station,  Antarctica, Japan",-69.0125,39.59,14.0
+TAB,"Tabatinga, Brazil",-5.95,-70.07,-9999.99
 TAC,"Tacolneston, United Kingdom",52.5177,1.1386,56.0
 TAL,"Tallahassee,  Florida, United States",30.43,-84.33,53.0
 TAM,"Tamanrasset, Algeria",22.78,5.52,1377.0
 TAO,"Toronto Atmospheric Observatory,  University of Toronto,  Ontario, Canada",43.66,-79.4,100.0
 TBL,"Table Mountain, United States",40.125,-105.2368,1689.0
 TBP,"Tambopata, Peru",-12.8201,-69.2918,200.0
+TEF,"Tefe, Brazil",-3.6,-66.5,-9999.0
 TER,"Teriberka, Russia",69.2,35.1,40.0
 TFA,"Tampa,  FL, United States",27.85,-83.8333,0.0
 TGC,"Offshore Corpus Christi,  Texas, United States",27.73,-96.86,0.0
@@ -364,18 +390,21 @@ USV,"Syktyvkar, Russia",62.23,50.4,106.0
 UTA,"Wendover,  Utah, United States",39.9018,-113.7181,1327.0
 UTO,"Uto, Finland",59.7839,21.3672,8.0
 UUM,"Ulaan Uul, Mongolia",44.4516,111.0956,1007.0
+VAA,"Cartersville,  Georgia, United States",32.91,-79.36,239.9
 VAC,"Valderejo, Spain",42.8786,-3.2139,1102.0
 VAR,"Varrio, Finland",67.755,29.609,400.0
 VGN,"Vaganovo, Russia",54.4972,62.3247,192.0
 VKV,"Voeikov, Russia",59.95,30.7,70.0
 WAI,"Wallops Island,  Virginia, United States",37.86,-75.51,13.0
 WAO,"Weybourne,  Norfolk, United Kingdom",52.9502,1.1219,20.0
+WBI,"West Branch,  Iowa, United States",41.7248,-91.3529,241.7
 WES,"Westerland, Germany",55.0,8.0,8.0
 WGC,"Walnut Grove,  California, United States",38.265,-121.4911,0.0
 WHI,"Whistler, Canada",50.0593,-122.9576,2182.0
 WIS,"Weizmann Institute of Science at the Arava Institute,  Ketura, Israel",29.9646,35.0605,151.0
 WKT,"Moody,  Texas, United States",31.3149,-97.3269,251.0
 WNJ,"Waterford Works,  NJ, United States",39.7288,-74.8441,33.0
+WOL,"Wollongong, Australia",-34.406,150.879,-9999.99
 WSA,"Sable Island,  Nova Scotia, Canada",43.9322,-60.0093,5.0
 WSD,"Wessington,  South Dakota, United States",44.0502,-98.588,592.0
 WVR,"Weaverville,  California, United States",40.7309,-122.9419,613.0
