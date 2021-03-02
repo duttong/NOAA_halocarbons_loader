@@ -49,7 +49,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             df = pd.read_csv('sites.csv')
         except FileNotFoundError:
             # path if cloned from github
-            df = pd.read_csv('NOAA_halocarbon_loader/sites.csv')
+            df = pd.read_csv('NOAA_halocarbons_loader/sites.csv')
         return df
 
     def loader(self, gas, program='msd', freq='monthly', gapfill=False, addlocation=True, verbose=True):
