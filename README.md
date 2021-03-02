@@ -1,11 +1,13 @@
 <h1>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h1>
 
-<p>Methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://www.esrl.noaa.gov/gmd/aftp/hats/</p>
+<p>A simply methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://www.esrl.noaa.gov/gmd/aftp/hats/</p>
 
 <p>The current list of gases avaiable are: C2Cl4, C2H2, C2H6, C3H8, CCl4, CF4, CH2Cl2, CH3Br, CH3CCl3, CH3Cl, F11, F113,
  F114, F115, F12, F13, HCFC123, HCFC124, HCFC133a, HCFC141b, HCFC142b, HCFC22, HFC125, HFC134a, HFC143a, HFC152a, HFC227ea,
  HFC236fa, HFC32, HFC365mfc, HFO1234yf, HFO1234ze, N2O, NF3, OCS, PFC116, PFC218, SF6, SO2F2, h1211, h1301, h2402,
  i-butane, i-pentane, n-butane, n-hexane, n-pentane</p>
+ 
+<p>The example below shows how to use the loader method. The following keywords are available: program, freq, gapfill, and addlocation</p>
 
 <h3>program</h3>
 <p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the <strong>program</strong> keyword. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurement programs. The 'combined' or 'combo' program can be used for the following gases: N2O, SF6, F11, F12, F113, CCl4.</p>
