@@ -34,10 +34,8 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.gases.append('CCl4')
         self.gases = sorted(self.gases)
         self.gasloaded = ''
-        self.lats = {'brw': 71.3, 'sum': 72.5, 'nwr': 40.04, 'mlo': 19.5, 'smo': -14.3,
-                    'spo': -67.0, 'alt': 82.45, 'cgo': -40.68, 'kum': 19.52, 'mhd': 53.33,
-                    'psa': -64.92, 'thd': 41.05, 'lef': 45.95, 'ush': -54.87, 'hfm': 42.54,
-                    'gmi': 13.386, 'mid': 28.21, 'asc': -7.967, 'eic': -27.16}
+        # pandas data frame with GML site info
+        self.gml_sites = self.gml_sites()
         # background air measurement sites
         self.bk_sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
         self.programs_msd = ('m3', 'pr1', 'msd')
@@ -45,7 +43,11 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.programs_flaskECD = ('oldgc', 'otto')
         self.programs_combined = ('combined', 'combo')
 
-    def loader(self, gas, program='msd', freq='monthly', gapfill=False, verbose=True):
+    def gml_sites(self):
+        """ Site info from the GML DB """
+        return pd.read_csv('sites.csv')
+
+    def loader(self, gas, program='msd', freq='monthly', gapfill=False, addlocation=True, verbose=True):
         """ Main loader method. """
         gas = self.gas_conversion(gas)
         self.gasloaded = gas
@@ -95,6 +97,24 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                 df.sort_index(inplace=True)
                 print(f'gapfiller took {time()-t0:.1f} seconds')
 
+        # insert lat, lon, elev into dataframe
+        if addlocation:
+            df = self.add_location(df)
+
+        return df
+
+    def add_location(self, df_org):
+        """ Add lat, lon, and elev based on data in the self.gml_sites dataframe """
+        df = df_org.copy().reset_index()
+        for site in df.site.unique():
+            lat = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lat.values[0]
+            lon = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lon.values[0]
+            elev = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].elev.values[0]
+            df.loc[df.site == site, 'lat'] = lat
+            df.loc[df.site == site, 'lon'] = lon
+            df.loc[df.site == site, 'elev'] = elev
+
+        df = df.set_index(['site', 'date'])
         return df
 
     def gas_conversion(self, gas):
