@@ -6,17 +6,21 @@
  F114, F115, F12, F13, HCFC123, HCFC124, HCFC133a, HCFC141b, HCFC142b, HCFC22, HFC125, HFC134a, HFC143a, HFC152a, HFC227ea,
  HFC236fa, HFC32, HFC365mfc, HFO1234yf, HFO1234ze, N2O, NF3, OCS, PFC116, PFC218, SF6, SO2F2, h1211, h1301, h2402,
  i-butane, i-pentane, n-butane, n-hexane, n-pentane</p>
- 
+
 <h3>program</h3>
 <p>There are several measurement programs for halocarbon data. The loader method in the class HATS_Loader will return monthly mean flask data measured on the M3 mass spectrometer instrument. To select data from a different measurement program use the <strong>program</strong> keyword. Valid flask measurement programs include 'M3', 'otto', 'oldgc'. Use 'CATS' or 'RITS' for in situ measurement programs. The 'combined' or 'combo' program can be used for the following gases: N2O, SF6, F11, F12, F113, CCl4.</p>
 
 <h3>freq</h3>
-<p>The <strong>freq</strong> keyword is short for measurement frequence. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
+<p>The <strong>freq</strong> keyword is short for measurement frequency. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
 
 <h3>gapfill</h3>
-<p>When the gapfill keyword is set to True and the frequency of data (freq keyword) is 'monthly', a seasonally interpolation is done to fill any missing data. The dataframe returned will have five columns: mf, sd, model, gf, gfsd. Where the sesonal model is used to gapfill missing data. The gapfilled data is 'gf' in the dataframe.</p>
+<p>When the gapfill keyword is set to True and the frequency of data (freq keyword) is 'monthly', a seasonally interpolation is done to fill any missing data. The dataframe returned will have five columns: mf, sd, model, gf, gfsd. Where the seasonal model is used to gapfill missing data. The gapfilled data is 'gf' in the dataframe.</p>
 
-<p>The loader returns a Python Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
+<h3>addlocation</h3>
+<p>By default, latitude, longitude, and sample elevation are added to the dataframe. Set
+addlocation to False to exclude these fields.</p>
+
+<p>The loader returns a Python Pandas multi-index dataframe where the index is a three letter site code and the measurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
 
 <h3>Igor Pro Halocarbons Loader</h3>
 <p>The <strong>HATS FTP Data.ipf</strong> file are Igor Pro functions to load data from the GML FTP site. They are similar to the Python functions but do not have gap fill methods.</p>
