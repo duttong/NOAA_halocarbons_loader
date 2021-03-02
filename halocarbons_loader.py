@@ -29,8 +29,8 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
     def __init__(self):
         super().__init__()
         # list of all gases available on FTP site
-        self.gases = list(self.urls.keys())
-        self.gases.append('N2O')    # add N2O and CCl4
+        self.gases = list(self.urls.keys())     # MSD gases
+        self.gases.append('N2O')    # add N2O and CCl4 (non MSD gases)
         self.gases.append('CCl4')
         self.gases = sorted(self.gases)
         self.gasloaded = ''
@@ -106,6 +106,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         if addlocation:
             df = self.add_location(df)
 
+        # add meta data to dataframe (this is exerimental as of 2021)
+        df.attrs['gas'] = gas
+        df.attrs['program'] = program
+        
         return df
 
     def add_location(self, df_org):
