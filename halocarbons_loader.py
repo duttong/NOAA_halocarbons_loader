@@ -45,7 +45,12 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
     def gml_sites(self):
         """ Site info from the GML DB """
-        return pd.read_csv('sites.csv')
+        try:
+            df = pd.read_csv('sites.csv')
+        except FileNotFoundError:
+            # path if cloned from github
+            df = pd.read_csv('NOAA_halocarbon_loader/sites.csv')
+        return df
 
     def loader(self, gas, program='msd', freq='monthly', gapfill=False, addlocation=True, verbose=True):
         """ Main loader method. """
