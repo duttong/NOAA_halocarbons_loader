@@ -18,6 +18,9 @@
 
 <p>The loader returns a Python Pandas multi-index dataframe where the index are a three letter site code and the measesurement date. Columns returned are dry mole fraction in parts-per-trillion (ppt) (except for N2O which is in parts-per-billion) and one standard deviation of the mean of air measurements. Columns are denoted as 'mf' for mole fraction and 'sd' for standard deviation.</p>
 
+<h3>Igor Pro Halocarbons Loader</h3>
+<p>The <strong>HATS FTP Data.ipf</strong> file are Igor Pro functions to load data from the GML FTP site. They are similar to the Python functions but do not have gap fill methods.</p>
+
 <h3>Examples:</h3>
 
 ```python
