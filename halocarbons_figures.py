@@ -109,6 +109,10 @@ class HATS_figures:
         gas = prog_df.attrs['gas']
         df = prog_df.loc[prog_df.site == site].reset_index()
 
+        # no data for site
+        if df.shape[0] == 0:
+            return
+
         if errorbars:
             df.loc[:, 'lower'] = df.mf - df.sd
             df.loc[:, 'upper'] = df.mf + df.sd
