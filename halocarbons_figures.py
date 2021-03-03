@@ -6,6 +6,28 @@ import altair as alt
 
 class HATS_figures:
 
+    def multi_instrument_dataframe(self, list_dfs):
+        """ Create a synced dataframe from a list of measurement program
+            dataframs, list_dfs """
+
+        dfs = []
+
+        # iterate through program dataframes for mf and sd
+        for df in list_dfs:
+            df = df.reset_index()
+            df = df[['date', 'site', 'mf', 'sd', 'lat', 'lon', 'elev']]
+            df['prog'] = df.attrs['program']
+            dfs.append(df)
+
+        # combine into one dataframe
+        df = pd.concat(dfs)
+        df = df.set_index('date').sort_index()
+
+        # use attrs for meta data. In this case the gas name.
+        df.attrs['gas'] = list_dfs[0].attrs['gas']
+
+        return df
+
     def mf_units(self, gas):
         units = '(ppb)' if gas == 'N2O' else '(ppt)'
         return units
