@@ -149,9 +149,7 @@ class HATS_figures:
             x=alt.X('date'),
             y=alt.Y('lower'),
             y2=alt.Y2('upper'),
-            color=alt.Color('prog:O',
-                            legend=None,
-                            scale=palette),
+            color=alt.Color('prog:O', scale=palette),
             opacity=alt.condition(selection, alt.value(0.3), alt.value(0.0))
         )
 
@@ -160,7 +158,6 @@ class HATS_figures:
             y=alt.Y('prog:O', title='Program',
                     axis=alt.Axis(labelFontSize=12, titleFontSize=16)),
             color=alt.condition(selection, 'prog:O', alt.value('lightgray'),
-                                legend=None,
                                 scale=palette)
         ).add_selection(selection)
 
@@ -168,3 +165,62 @@ class HATS_figures:
             ((chart + eb) | clickable_legend).display()
         else:
             ((chart) | clickable_legend).display()
+
+    def return_ratios(self, df_org, prog0, prog1):
+        """ Returns a long data from of ratios between prog0 and prog1.
+            df_org is a multi_instrument_dataframe
+            prog0 and prog1 are strings that match the prog column in df_org """
+
+        # find the sites that are in common to both prog0 and prog1
+        s0 = df_org.loc[df_org.prog == prog0].site.unique()
+        s1 = df_org.loc[df_org.prog == prog1].site.unique()
+        common_sites = set(s0) & set(s1)
+
+        dfs = []
+        for site in common_sites:
+            sdf = df_org.loc[df_org.site == site].copy()
+            sdf['ratio'] = sdf.loc[sdf.prog == prog0].mf / sdf.loc[sdf.prog == prog1].mf
+            sdf.drop(['mf', 'sd', 'lat', 'lon', 'elev', 'prog'], axis=1, inplace=True)
+            dfs.append(sdf)
+
+        sdf = pd.concat(dfs).dropna()
+        return sdf
+
+    def site_ratios_figure(self, df0, df1):
+        """ Generates a figure of ratios for each site.
+            df0 and df1 are Pandas data frames returned from the halocarbons_loader
+            method. """
+
+        gas = df0.attrs['gas']
+        prog0 = df0.attrs['program']
+        prog1 = df1.attrs['program']
+
+        measurements = self.multi_instrument_dataframe([df0, df1])
+        df = self.return_ratios(measurements, prog0, prog1)
+
+        line = alt.Chart(df.reset_index()).mark_line().encode(
+            x=alt.X('date:T',
+                    axis=alt.Axis(title='Date',
+                                  labelAngle=-60, format=("%b %Y"),
+                                  labelFontSize=12, titleFontSize=16)),
+            y=alt.Y('ratio', scale=alt.Scale(zero=False),
+                    axis=alt.Axis(title=f'{gas} {prog0} / {prog1} Ratio',
+                                  labelFontSize=12, titleFontSize=16)),
+            color=alt.Color('site', legend=None),
+            tooltip=['ratio:Q', 'site:N']
+        )
+
+        points = line.mark_point(filled=True, size=100).encode(
+            color='site',
+            shape='site',
+        )
+
+        alt.layer(
+            line,
+            points
+        ).resolve_scale(
+            color='independent',
+            shape='independent'
+        ).properties(
+            height=400, width=700
+        ).interactive().display()
