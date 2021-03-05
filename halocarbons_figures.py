@@ -40,6 +40,8 @@ class HATS_Figures:
             for a measurement program. prog_df is a pandas dataframe. """
 
         # return if dataframe is empty
+        if prog_df is None:
+            return
         if prog_df.shape[0] == 0:
             return
 
@@ -112,6 +114,8 @@ class HATS_Figures:
             at a single station (site). prog_df is a pandas dataframe. """
 
         # return if dataframe is empty
+        if prog_df is None:
+            return
         if prog_df.shape[0] == 0:
             return
 
