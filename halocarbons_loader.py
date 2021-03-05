@@ -395,7 +395,8 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
 
         if gas not in self.gases:
             print(f'{self.prog} does not measure {gas}')
-            return
+            print(f'Choose from: {self.gases}')
+            return pd.DataFrame()
 
         if self.verbose:
             print(f'Loading data for {gas}')
