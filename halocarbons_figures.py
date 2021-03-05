@@ -213,6 +213,9 @@ class HATS_Figures:
             df0 and df1 are Pandas data frames returned from the halocarbons_loader
             method. """
 
+        if df0 is None or df1 is None:
+            return
+
         gas = df0.attrs['gas']
         prog0 = df0.attrs['program']
         prog1 = df1.attrs['program']
