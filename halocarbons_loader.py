@@ -135,9 +135,17 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             subs are substitutions or commonly used aliases. """
 
         # N2O and CCl4 are not in the self.gases list
-        subs = {'F11B': 'F11', 'COS': 'OCS', 'MC': 'CH3CCl3', 'CT': 'CCl4',
-                '1211': 'h1211', 'F134a': 'HFC134a',
-                'CFC11': 'F11', 'CFC12': 'F12', 'CFC113': 'F113'}
+        # the keys should be in all uppercase
+        subs = {'F11B': 'F11', 'COS': 'OCS',
+                'MC': 'CH3CCl3', 'CT': 'CCl4',
+                '1211': 'h1211', '1301': 'h1301', '2402': 'h2402',
+                'CFC11': 'F11', 'CFC12': 'F12', 'CFC113': 'F113',
+                '11': 'F11', '113': 'F113', '114': 'F114', '115': 'F115',
+                '12': 'F12', '13': 'F13',
+                '123': 'HCFC123', '124': 'HCFC124', '133A': 'HCFC133a', '133': 'HCFC133a',
+                '141B': 'HCFC141b', '141': 'HCFC141b', '142B': 'HCFC142b', '142': 'HCFC142b',
+                '22': 'HCFC22', '125': 'HFC125', '134A': 'HFC134a', '134': 'HFC134a',
+                '143A': 'HFC143a', '143': 'HFC143a', '152A': 'HFC152a', '152': 'HFC152a'}
 
         # first compare to substitutions
         if gas.upper() in subs:
