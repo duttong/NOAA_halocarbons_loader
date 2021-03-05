@@ -4,7 +4,7 @@ import pandas as pd
 import altair as alt
 
 
-class HATS_figures:
+class HATS_Figures:
 
     def multi_instrument_dataframe(self, list_dfs):
         """ Create a synced dataframe from a list of measurement program
