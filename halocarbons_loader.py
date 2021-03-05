@@ -87,6 +87,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             print(f'Unknown measurement program: {program}')
             return
 
+        # the loader did not return any data
+        if df.shape[0] == 0:
+            return
+
         if gapfill and (freq == 'monthly'):
             if program not in self.programs_combined:    # combined data already gapfilled
                 t0 = time()
@@ -143,7 +147,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             proper = self._casecompare(gas)
         else:
             print(f'NOAA/GML does not measure {gas}')
-            proper = ''
+            proper = gas
         return proper
 
     def _casecompare(self, gas):
@@ -197,7 +201,6 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         try:
             filename = self.urls[gas]
         except KeyError:
-            print(f'The MSD program does not report data for: {gas}')
             print(f'Choose from: {sorted(list(self.urls.keys()))}')
             return pd.DataFrame()
 
@@ -255,8 +258,13 @@ class insitu(halocarbon_urls.insitu_URLs):
         self.mp_processes = 2
 
     def insitu_csv_reader(self, gas, freq, site):
-        urls = self.urls(site, freq=freq)
-        url = urls[gas]
+        try:
+            urls = self.urls(site, freq=freq)
+            url = urls[gas]
+        except KeyError:
+            print(f'The insitu program does not report data for: {gas}')
+            print(f'Choose from: {self.gases}')
+            return pd.DataFrame()
 
         if self.verbose:
             print(f'File URL: {url}')
@@ -301,7 +309,8 @@ class insitu(halocarbon_urls.insitu_URLs):
 
         if gas not in self.gases:
             print(f'{self.prog} does not measure {gas}')
-            return
+            print(f'Choose from: {self.gases}')
+            return pd.DataFrame()
 
         if self.verbose:
             print(f'Loading data for {gas}')

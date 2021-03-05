@@ -36,6 +36,10 @@ class HATS_Figures:
         """ Creates an interactive figure with data from all sample locations
             for a measurement program. prog_df is a pandas dataframe. """
 
+        # return if dataframe is empty
+        if prog_df.shape[0] == 0:
+            return
+
         # upper and lower sd values for error bands
         df = prog_df.reset_index().copy()
         gas = prog_df.attrs['gas']
@@ -103,6 +107,10 @@ class HATS_Figures:
     def multi_program_figure(self, site, prog_df, errorbars=True):
         """ Creates an interactive figure with data from all sampling programs
             at a single station (site). prog_df is a pandas dataframe. """
+
+        # return if dataframe is empty
+        if prog_df.shape[0] == 0:
+            return
 
         # upper and lower sd values for error bands
         site = site.lower()
