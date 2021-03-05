@@ -14,7 +14,10 @@ class HATS_Figures:
 
         # iterate through program dataframes for mf and sd
         for df in list_dfs:
-            if df.shape[0] == 0 or df.shape is None:
+            if df is None:
+                print('Blank dataframe in list. Skipping.')
+                continue
+            if df.shape[0] == 0:
                 print('Blank dataframe in list. Skipping.')
                 continue
             df = df.reset_index()
