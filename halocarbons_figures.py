@@ -14,6 +14,9 @@ class HATS_Figures:
 
         # iterate through program dataframes for mf and sd
         for df in list_dfs:
+            if df.shape[0] == 0:
+                print('Blank dataframe in list. Skipping.')
+                continue
             df = df.reset_index()
             df = df[['date', 'site', 'mf', 'sd', 'lat', 'lon', 'elev']]
             df['prog'] = df.attrs['program']
@@ -190,6 +193,10 @@ class HATS_Figures:
             sdf['ratio'] = sdf.loc[sdf.prog == prog0].mf / sdf.loc[sdf.prog == prog1].mf
             sdf.drop(['mf', 'sd', 'lat', 'lon', 'elev', 'prog'], axis=1, inplace=True)
             dfs.append(sdf)
+
+        # no common_sites found, return an empty dataframe
+        if len(dfs) == 0:
+            return pd.DataFrame()
 
         sdf = pd.concat(dfs).dropna()
         return sdf
