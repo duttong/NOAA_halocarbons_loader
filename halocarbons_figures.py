@@ -222,6 +222,7 @@ class HATS_Figures:
 
         measurements = self.multi_instrument_dataframe([df0, df1])
         df = self.return_ratios(measurements, prog0, prog1)
+        mm = df.groupby('date').mean()
 
         line = alt.Chart(df.reset_index()).mark_line().encode(
             x=alt.X('date:T',
@@ -235,6 +236,11 @@ class HATS_Figures:
             tooltip=['ratio:Q', 'site:N']
         )
 
+        mm_line = alt.Chart(mm.reset_index()).mark_line(size=5).encode(
+            x='date:T',
+            y='ratio'
+        )
+
         points = line.mark_point(filled=True, size=100).encode(
             color='site',
             shape='site',
@@ -242,6 +248,7 @@ class HATS_Figures:
 
         alt.layer(
             line,
+            mm_line,
             points
         ).resolve_scale(
             color='independent',
