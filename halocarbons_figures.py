@@ -238,7 +238,8 @@ class HATS_Figures:
 
         mm_line = alt.Chart(mm.reset_index()).mark_line(size=5).encode(
             x='date:T',
-            y='ratio'
+            y='ratio',
+            color=alt.value("#423D3B")
         )
 
         points = line.mark_point(filled=True, size=100).encode(
@@ -248,8 +249,8 @@ class HATS_Figures:
 
         alt.layer(
             line,
-            mm_line,
-            points
+            points,
+            mm_line
         ).resolve_scale(
             color='independent',
             shape='independent'
