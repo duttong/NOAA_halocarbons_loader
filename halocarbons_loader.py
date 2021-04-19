@@ -41,7 +41,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.programs_msd = ('m3', 'pr1', 'msd')
         self.programs_insitu = ('rits', 'cats', 'insitu')
         self.programs_flaskECD = ('oldgc', 'otto')
-        self.programs_combined = ('combined', 'combo')
+        self.programs_combined = ('combined', 'combine', 'combo')
 
     def gml_sites(self):
         """ Site info from the GML DB """
@@ -107,7 +107,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                 print(f'gapfiller took {time()-t0:.1f} seconds')
 
         # insert lat, lon, elev into dataframe
-        if addlocation:
+        if program not in self.programs_combined and addlocation:
             df = self.add_location(df)
 
         # add meta data to dataframe (this is exerimental as of 2021)
