@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
-baseftp = 'ftp://ftp.cmdl.noaa.gov/hats'
+# baseftp = 'ftp://ftp.cmdl.noaa.gov/hats'
+basehttp = 'https://www.esrl.noaa.gov/gmd/aftp/data/hats'
 
 
 class HATS_MSD_URLs:
@@ -15,72 +16,72 @@ class HATS_MSD_URLs:
         u = {}
 
         # CFCs
-        u['F11'] = f'{baseftp}/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask.txt'
-        u['F113'] = f'{baseftp}/cfcs/cfc113/flasks/GCMS/CFC113_GCMS_flask.txt'
-        u['F12'] = f'{baseftp}/cfcs/cfc12/flasks/GCMS/CFC12_GCMS_flask.txt'
+        u['F11'] = f'{basehttp}/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask.txt'
+        u['F113'] = f'{basehttp}/cfcs/cfc113/flasks/GCMS/CFC113_GCMS_flask.txt'
+        u['F12'] = f'{basehttp}/cfcs/cfc12/flasks/GCMS/CFC12_GCMS_flask.txt'
 
         # halons
-        u['h1211'] = f'{baseftp}/halons/flasks/HAL1211_GCMS_flask.txt'
-        u['h2402'] = f'{baseftp}/halons/flasks/Hal2402_GCMS_flask.txt'
-        u['h1301'] = f'{baseftp}/halons/flasks/H-1301_M2&PR1_MS_flask.txt'
+        u['h1211'] = f'{basehttp}/halons/flasks/HAL1211_GCMS_flask.txt'
+        u['h2402'] = f'{basehttp}/halons/flasks/Hal2402_GCMS_flask.txt'
+        u['h1301'] = f'{basehttp}/halons/flasks/H-1301_M2&PR1_MS_flask.txt'
 
         # HCFCs
-        u['HCFC141b'] = f'{baseftp}/hcfcs/hcfc141b/HCFC141B_GCMS_flask.txt'
-        u['HCFC142b'] = f'{baseftp}/hcfcs/hcfc142b/flasks/HCFC142B_GCMS_flask.txt'
-        u['HCFC22'] = f'{baseftp}/hcfcs/hcfc22/flasks/HCFC22_GCMS_flask.txt'
+        u['HCFC141b'] = f'{basehttp}/hcfcs/hcfc141b/HCFC141B_GCMS_flask.txt'
+        u['HCFC142b'] = f'{basehttp}/hcfcs/hcfc142b/flasks/HCFC142B_GCMS_flask.txt'
+        u['HCFC22'] = f'{basehttp}/hcfcs/hcfc22/flasks/HCFC22_GCMS_flask.txt'
 
         # HFCs
-        u['HFC152a'] = f'{baseftp}/hfcs/hf152a_GCMS_flask.txt'
-        u['HFC134a'] = f'{baseftp}/hfcs/hfc134a_GCMS_flask.txt'
-        u['HFC143a'] = f'{baseftp}/hfcs/HFC-143a_M2&PR1_MS_flask.txt'
-        u['HFC365mfc'] = f'{baseftp}/hfcs/HFC-365mfc_GCMS_flask.txt'
-        u['HFC32'] = f'{baseftp}/hfcs/HFC-32_M2&PR1_MS_flask.txt'
-        u['HFC227ea'] = f'{baseftp}/hfcs/HFC-227ea_GCMS_flask.txt'
-        u['HFC125'] = f'{baseftp}/hfcs/HFC-125_M2&PR1_MS_flask.txt'
+        u['HFC152a'] = f'{basehttp}/hfcs/hf152a_GCMS_flask.txt'
+        u['HFC134a'] = f'{basehttp}/hfcs/hfc134a_GCMS_flask.txt'
+        u['HFC143a'] = f'{basehttp}/hfcs/HFC-143a_M2&PR1_MS_flask.txt'
+        u['HFC365mfc'] = f'{basehttp}/hfcs/HFC-365mfc_GCMS_flask.txt'
+        u['HFC32'] = f'{basehttp}/hfcs/HFC-32_M2&PR1_MS_flask.txt'
+        u['HFC227ea'] = f'{basehttp}/hfcs/HFC-227ea_GCMS_flask.txt'
+        u['HFC125'] = f'{basehttp}/hfcs/HFC-125_M2&PR1_MS_flask.txt'
 
         # Methylhalides
-        u['CH3Br'] = f'{baseftp}/methylhalides/ch3br/flasks/CH3BR_GCMS_flask.txt'
-        u['CH3Cl'] = f'{baseftp}/methylhalides/ch3cl/flasks/CH3Cl_GCMS_flask.txt'
+        u['CH3Br'] = f'{basehttp}/methylhalides/ch3br/flasks/CH3BR_GCMS_flask.txt'
+        u['CH3Cl'] = f'{basehttp}/methylhalides/ch3cl/flasks/CH3Cl_GCMS_flask.txt'
 
         # Solvents
-        u['C2Cl4'] = f'{baseftp}/solvents/C2Cl4/flasks/pce_GCMS_flask.txt'
-        u['CH2Cl2'] = f'{baseftp}/solvents/CH2Cl2/flasks/ch2cl2_GCMS_flask.txt'
-        u['CH3CCl3'] = f'{baseftp}/solvents/CH3CCl3/flasks/GCMS/CH3CCL3_GCMS_flask.txt'
+        u['C2Cl4'] = f'{basehttp}/solvents/C2Cl4/flasks/pce_GCMS_flask.txt'
+        u['CH2Cl2'] = f'{basehttp}/solvents/CH2Cl2/flasks/ch2cl2_GCMS_flask.txt'
+        u['CH3CCl3'] = f'{basehttp}/solvents/CH3CCl3/flasks/GCMS/CH3CCL3_GCMS_flask.txt'
 
         # Carbonyl Sulfide (COS or OCS)
-        u['OCS'] = f'{baseftp}/carbonyl_sulfide/OCS__GCMS_flask.txt'
+        u['OCS'] = f'{basehttp}/carbonyl_sulfide/OCS__GCMS_flask.txt'
 
         # PERSEUS specific gases
-        u['C3H8'] = f'{baseftp}/PERSEUS/C3H8_PR1_MS_flask.txt'
-        u['C2H6'] = f'{baseftp}/PERSEUS/C2H6_PR1_MS_flask.txt'
-        u['CF4'] = f'{baseftp}/PERSEUS/CF4_PR1_MS_flask.txt'
-        u['NF3'] = f'{baseftp}/PERSEUS/NF3_PR1_MS_flask.txt'
-        u['PFC116'] = f'{baseftp}/PERSEUS/PFC-116_PR1_MS_flask.txt'
-        u['SO2F2'] = f'{baseftp}/PERSEUS/SO2F2_PR1_MS_flask.txt'
-        u['HFC236fa'] = f'{baseftp}/PERSEUS/HFC-236fa_PR1_MS_flask.txt'
-        u['C2Cl4'] = f'{baseftp}/PERSEUS/C2Cl4_PR1_MS_flask.txt'
-        u['C2H2'] = f'{baseftp}/PERSEUS/C2H2_PR1_MS_flask.txt'
-        u['F114'] = f'{baseftp}/PERSEUS/CFC-114_PR1_MS_flask.txt'
-        u['F115'] = f'{baseftp}/PERSEUS/CFC-115_PR1_MS_flask.txt'
-        u['F13'] = f'{baseftp}/PERSEUS/CFC-13_PR1_MS_flask.txt'
-        u['HCFC123'] = f'{baseftp}/PERSEUS/HCFC-123_PR1_MS_flask.txt'
-        u['HCFC124'] = f'{baseftp}/PERSEUS/HCFC-124_PR1_MS_flask.txt'
-        u['HCFC133a'] = f'{baseftp}/PERSEUS/HCFC-133a_PR1_MS_flask.txt'
-        u['HFC125'] = f'{baseftp}/PERSEUS/HFC-125_PR1_MS_flask.txt'
+        u['C3H8'] = f'{basehttp}/PERSEUS/C3H8_PR1_MS_flask.txt'
+        u['C2H6'] = f'{basehttp}/PERSEUS/C2H6_PR1_MS_flask.txt'
+        u['CF4'] = f'{basehttp}/PERSEUS/CF4_PR1_MS_flask.txt'
+        u['NF3'] = f'{basehttp}/PERSEUS/NF3_PR1_MS_flask.txt'
+        u['PFC116'] = f'{basehttp}/PERSEUS/PFC-116_PR1_MS_flask.txt'
+        u['SO2F2'] = f'{basehttp}/PERSEUS/SO2F2_PR1_MS_flask.txt'
+        u['HFC236fa'] = f'{basehttp}/PERSEUS/HFC-236fa_PR1_MS_flask.txt'
+        u['C2Cl4'] = f'{basehttp}/PERSEUS/C2Cl4_PR1_MS_flask.txt'
+        u['C2H2'] = f'{basehttp}/PERSEUS/C2H2_PR1_MS_flask.txt'
+        u['F114'] = f'{basehttp}/PERSEUS/CFC-114_PR1_MS_flask.txt'
+        u['F115'] = f'{basehttp}/PERSEUS/CFC-115_PR1_MS_flask.txt'
+        u['F13'] = f'{basehttp}/PERSEUS/CFC-13_PR1_MS_flask.txt'
+        u['HCFC123'] = f'{basehttp}/PERSEUS/HCFC-123_PR1_MS_flask.txt'
+        u['HCFC124'] = f'{basehttp}/PERSEUS/HCFC-124_PR1_MS_flask.txt'
+        u['HCFC133a'] = f'{basehttp}/PERSEUS/HCFC-133a_PR1_MS_flask.txt'
+        u['HFC125'] = f'{basehttp}/PERSEUS/HFC-125_PR1_MS_flask.txt'
         # use the M2 + PR1 file for HFC143a
-        # u['HFC143a'] = f'{baseftp}/PERSEUS/HFC-143a_PR1_MS_flask.txt'
+        # u['HFC143a'] = f'{basehttp}/PERSEUS/HFC-143a_PR1_MS_flask.txt'
         # removed HFC23
-        # u['HFC23'] = f'{baseftp}/PERSEUS/HFC-23_PR1_MS_flask.txt'
-        u['HFC32'] = f'{baseftp}/PERSEUS/HFC-32_PR1_MS_flask.txt'
-        u['HFO1234yf'] = f'{baseftp}/PERSEUS/HFO-1234yf_PR1_MS_flask.txt'
-        u['HFO1234ze'] = f'{baseftp}/PERSEUS/HFO-1234ze_PR1_MS_flask.txt'
-        u['PFC218'] = f'{baseftp}/PERSEUS/PFC-218_PR1_MS_flask.txt'
-        u['SF6'] = f'{baseftp}/PERSEUS/SF6_PR1_MS_flask.txt'
-        u['i-butane'] = f'{baseftp}/PERSEUS/i-butane_PR1_MS_flask.txt'
-        u['i-pentane'] = f'{baseftp}/PERSEUS/i-pentane_PR1_MS_flask.txt'
-        u['n-butane'] = f'{baseftp}/PERSEUS/n-butane_PR1_MS_flask.txt'
-        u['n-hexane'] = f'{baseftp}/PERSEUS/n-hexane_PR1_MS_flask.txt'
-        u['n-pentane'] = f'{baseftp}/PERSEUS/n-pentane_PR1_MS_flask.txt'
+        # u['HFC23'] = f'{basehttp}/PERSEUS/HFC-23_PR1_MS_flask.txt'
+        u['HFC32'] = f'{basehttp}/PERSEUS/HFC-32_PR1_MS_flask.txt'
+        u['HFO1234yf'] = f'{basehttp}/PERSEUS/HFO-1234yf_PR1_MS_flask.txt'
+        u['HFO1234ze'] = f'{basehttp}/PERSEUS/HFO-1234ze_PR1_MS_flask.txt'
+        u['PFC218'] = f'{basehttp}/PERSEUS/PFC-218_PR1_MS_flask.txt'
+        u['SF6'] = f'{basehttp}/PERSEUS/SF6_PR1_MS_flask.txt'
+        u['i-butane'] = f'{basehttp}/PERSEUS/i-butane_PR1_MS_flask.txt'
+        u['i-pentane'] = f'{basehttp}/PERSEUS/i-pentane_PR1_MS_flask.txt'
+        u['n-butane'] = f'{basehttp}/PERSEUS/n-butane_PR1_MS_flask.txt'
+        u['n-hexane'] = f'{basehttp}/PERSEUS/n-hexane_PR1_MS_flask.txt'
+        u['n-pentane'] = f'{basehttp}/PERSEUS/n-pentane_PR1_MS_flask.txt'
 
         return u
 
@@ -111,17 +112,17 @@ class insitu_URLs:
         suffix = {'hourly': 'All', 'daily': 'Day', 'monthly': 'MM'}
 
         # gases common to both insitu programs
-        u['F11'] = f'{baseftp}/cfcs/cfc11/insituGCs/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
-        u['F12'] = f'{baseftp}/cfcs/cfc12/insituGCs/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
-        u['h1211'] = f'{baseftp}/halons/insituGCs/{self.prog}/{freq}/{site}_H1211_{suffix[freq]}.dat'
-        u['N2O'] = f'{baseftp}/n2o/insituGCs/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
-        u['CCl4'] = f'{baseftp}/solvents/CCl4/insituGCs/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
-        u['CH3CCl3'] = f'{baseftp}/solvents/CH3CCl3/insituGCs/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
+        u['F11'] = f'{basehttp}/cfcs/cfc11/insituGCs/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
+        u['F12'] = f'{basehttp}/cfcs/cfc12/insituGCs/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
+        u['h1211'] = f'{basehttp}/halons/insituGCs/{self.prog}/{freq}/{site}_H1211_{suffix[freq]}.dat'
+        u['N2O'] = f'{basehttp}/n2o/insituGCs/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
+        u['CCl4'] = f'{basehttp}/solvents/CCl4/insituGCs/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
+        u['CH3CCl3'] = f'{basehttp}/solvents/CH3CCl3/insituGCs/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
 
         # CATS additional gases
         if self.prog == 'CATS':
-            u['F113'] = f'{baseftp}/cfcs/cfc113/insituGCs/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
-            u['SF6'] = f'{baseftp}/sf6/insituGCs/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
+            u['F113'] = f'{basehttp}/cfcs/cfc113/insituGCs/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
+            u['SF6'] = f'{basehttp}/sf6/insituGCs/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
 
         return u
 
@@ -134,12 +135,12 @@ class Combined_Data_URLs:
 
     def combo_urls(self):
         u = {}
-        u['F11'] = f'{baseftp}/cfcs/cfc11/combined/HATS_global_F11.txt'
-        u['F12'] = f'{baseftp}/cfcs/cfc12/combined/HATS_global_F12.txt'
-        u['F113'] = f'{baseftp}/cfcs/cfc113/combined/HATS_global_F113.txt'
-        u['CCl4'] = f'{baseftp}/solvents/CCl4/combined/HATS_global_CCl4.txt'
-        u['N2O'] = f'{baseftp}/n2o/combined/GML_global_N2O.txt'
-        u['SF6'] = f'{baseftp}/sf6/combined/GML_global_SF6.txt'
+        u['F11'] = f'{basehttp}/cfcs/cfc11/combined/HATS_global_F11.txt'
+        u['F12'] = f'{basehttp}/cfcs/cfc12/combined/HATS_global_F12.txt'
+        u['F113'] = f'{basehttp}/cfcs/cfc113/combined/HATS_global_F113.txt'
+        u['CCl4'] = f'{basehttp}/solvents/CCl4/combined/HATS_global_CCl4.txt'
+        u['N2O'] = f'{basehttp}/n2o/combined/GML_global_N2O.txt'
+        u['SF6'] = f'{basehttp}/sf6/combined/GML_global_SF6.txt'
         return u
 
 
@@ -163,15 +164,15 @@ class Flask_GCECD_URLs:
 
         u = {}
         # OldGC gases
-        u['F11'] = f'{baseftp}/cfcs/cfc11/flasks/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
-        u['F12'] = f'{baseftp}/cfcs/cfc12/flasks/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
-        u['N2O'] = f'{baseftp}/n2o/flasks/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
+        u['F11'] = f'{basehttp}/cfcs/cfc11/flasks/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
+        u['F12'] = f'{basehttp}/cfcs/cfc12/flasks/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
+        u['N2O'] = f'{basehttp}/n2o/flasks/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
 
         # addtional gases measured by Otto
         if self.prog == 'Otto':
-            u['F113'] = f'{baseftp}/cfcs/cfc113/flasks/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
-            u['SF6'] = f'{baseftp}/sf6/flasks/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
-            u['CCl4'] = f'{baseftp}/solvents/CCl4/flasks/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
-            u['CH3CCl3'] = f'{baseftp}/solvents/CH3CCl3/flasks/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
+            u['F113'] = f'{basehttp}/cfcs/cfc113/flasks/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
+            u['SF6'] = f'{basehttp}/sf6/flasks/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
+            u['CCl4'] = f'{basehttp}/solvents/CCl4/flasks/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
+            u['CH3CCl3'] = f'{basehttp}/solvents/CH3CCl3/flasks/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
 
         return u
