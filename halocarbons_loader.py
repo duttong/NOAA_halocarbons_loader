@@ -263,7 +263,7 @@ class insitu(halocarbon_urls.insitu_URLs):
     def __init__(self, verbose=True, prog='CATS'):
         super().__init__(prog)
         self.verbose = verbose
-        self.mp_processes = 2
+        self.mp_processes = 6
 
     def insitu_csv_reader(self, gas, freq, site):
         try:
@@ -304,7 +304,7 @@ class insitu(halocarbon_urls.insitu_URLs):
 
         df['site'] = site       # add site column
 
-        sleep(1)    # slow down, don't hammer the FTP site with requests
+        # sleep(1)    # slow down, don't hammer the FTP site with requests
 
         return df
 
@@ -360,7 +360,7 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
     def __init__(self, verbose=True, prog='Otto'):
         super().__init__(prog)
         self.verbose = verbose
-        self.mp_processes = 2       # number of processors to use for FTP download
+        self.mp_processes = 6       # number of processors to use for FTP download
 
     def flask_csv_reader(self, gas, freq, site):
         urls = self.urls(site, freq=freq)
@@ -385,7 +385,7 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
 
         df['site'] = site       # add site column
 
-        sleep(1)    # slow down, don't hammer the FTP site with requests
+        # sleep(1)    # slow down, don't hammer the FTP site with requests
 
         return df
 
