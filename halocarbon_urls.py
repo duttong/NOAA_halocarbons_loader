@@ -149,8 +149,11 @@ class Flask_GCECD_URLs:
         When the FE3 instrument is online. Add to this class. """
 
     def __init__(self, prog='Otto'):
-        self.sites = ['alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo']
         self.prog = 'Otto' if prog.upper() == 'OTTO' else 'OldGC'
+        if self.prog == 'OldGC':
+            self.sites = ('alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo')
+        else:
+            self.sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
         self.gases = list(self.urls('mlo').keys())
 
     def urls(self, site, freq='monthly'):
