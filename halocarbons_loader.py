@@ -185,16 +185,48 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         gap = Gap_Methods()
         sub_df = df.loc[site]
         if 'mf' in sub_df.columns:
+            # print(f'{method} gap fill at {site}')
             if method == 'seasonal':
                 sub_df = gap.robust_seasonal(sub_df, forecast=True)
             elif method == 'linear':
                 sub_df = gap.linear(sub_df)
             else:
                 pass
+            sub_df['mf'] = sub_df['gf']
+            sub_df['sd'] = sub_df['gfsd']
+            sub_df.drop(['gf', 'gfsd'], axis=1, inplace=True)
         sub_df.rename_axis('date', inplace=True)
         sub_df['site'] = site
         return sub_df
 
+    def multi_instrument_dataframe(self, list_dfs):
+        """ Create a synced dataframe from a list of measurement program
+            dataframes, list_dfs """
+
+        dfs = []
+
+        # iterate through program dataframes for mf and sd
+        for df in list_dfs:
+            if df is None:
+                print('Blank dataframe in list. Skipping.')
+                continue
+            if df.shape[0] == 0:
+                print('Blank dataframe in list. Skipping.')
+                continue
+            df = df.reset_index()
+            df = df[['date', 'site', 'mf', 'sd', 'lat', 'lon', 'elev']]
+            df['prog'] = df.attrs['program']
+            dfs.append(df)
+
+        # combine into one dataframe
+        df = pd.concat(dfs)
+        df = df.set_index('date').sort_index()
+
+        # use attrs for meta data. In this case the gas name.
+        df.attrs['gas'] = list_dfs[0].attrs['gas']
+
+        return df
+    
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
     """ More info about the flask program can be found here:
