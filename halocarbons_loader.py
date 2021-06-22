@@ -226,7 +226,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         df.attrs['gas'] = list_dfs[0].attrs['gas']
 
         return df
-    
+
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
     """ More info about the flask program can be found here:
