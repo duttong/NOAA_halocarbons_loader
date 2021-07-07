@@ -135,7 +135,7 @@ class HATS_Figures:
             df.loc[:, 'lower'] = df.mf - df.sd
             df.loc[:, 'upper'] = df.mf + df.sd
 
-        palette = alt.Scale(domain=['msd', 'cats', 'otto', 'pr1'],
+        palette = alt.Scale(domain=['msd', 'cats', 'otto', 'pr1', 'fe3'],
                       range=['teal', 'darkred', 'orange', 'black', '#33a02c'])
         selection = alt.selection_multi(encodings=['color'])
 
