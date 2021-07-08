@@ -265,6 +265,8 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
                 parse_dates={'date': [2, 3]},
                 index_col='date', na_values=['nd', '0.0'])
             msd['site'] = msd['site'].str.lower()
+            # use only background "-" flagged data not ">" or "<"
+            msd = msd.loc[msd.flag == '-']
 
         msd.reset_index(inplace=True)
         self.sites = msd['site'].unique()
