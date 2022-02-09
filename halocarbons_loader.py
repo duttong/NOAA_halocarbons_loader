@@ -329,10 +329,11 @@ class insitu(halocarbon_urls.insitu_URLs):
             df.columns = ['mf', 'unc', 'n']      # rename columns
 
         elif freq == 'hourly':
+            _date_parser = lambda x: datetime.strptime(x, "%Y %m %d %H %M")
             df = pd.read_csv(url, delim_whitespace=True, comment='#',
                 na_values=['Nan'],  # pandas use 'nan', added 'Nan' to na_values
                 parse_dates={'date': [0, 1, 2, 3, 4]},
-                date_parser=self.__dateParser_hourly,
+                date_parser=_date_parser,
                 index_col='date')
             df.columns = ['mf', 'unc']
 
@@ -341,9 +342,6 @@ class insitu(halocarbon_urls.insitu_URLs):
         # sleep(1)    # slow down, don't hammer the FTP site with requests
 
         return df
-
-    def __dateParser_hourly(self, y, m, d, h, mn):
-        return datetime(int(y), int(m), int(d), int(h), int(mn))
 
     def insitu_loader(self, gas, freq='monthly', gapfill=False):
         """ Load CATS or RITS data for all sites. This method uses
@@ -410,10 +408,11 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
             df.columns = ['mf', 'sd', 'n']
 
         elif freq == 'hourly':
+            _date_parser = lambda x: datetime.strptime(x, "%Y %m %d %H %M")
             df = pd.read_csv(url, delim_whitespace=True, comment='#',
                 na_values=['Nan'],  # pandas use 'nan', added 'Nan' to na_values
                 parse_dates={'date': [0, 1, 2, 3, 4]},
-                date_parser=self.__dateParser_hourly,
+                date_parser=self._date_parser,
                 index_col='date')
             df.columns = ['mf', 'unc']
 
