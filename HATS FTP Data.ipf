@@ -1,12 +1,13 @@
+#pragma TextEncoding = "UTF-8"
 #pragma rtGlobals=3		// Use modern global access method and strict wave access.
-#include "macros-geoff"
-#include "macros-utilities"
-#pragma IgorVersion=6.3
-#pragma version=1.2			// 1.2 added PERSEUS
+#pragma IgorVersion=7.0
+#pragma version=1.4 
 
 // Added five HFCs for the M2 MSD instrument.  150622 GSD
 // Added F11 for MSD  180611
-// Added PERSEUS to the MSD loader.  190624
+// ver 1.2 Added PERSEUS to the MSD loader.  190624
+// Changed GMD to GML
+// ver 1.4 removed dependances on other procedure files 221004
 
 // combined data sets
 strconstant kCOMBmols = "N2O;SF6;F11;F12;F113;MC;CCl4;"
@@ -21,14 +22,14 @@ strconstant kOTTOmols = "N2O;SF6;F11;F12;F113;MC;CCl4;"
 // M3 mols
 strconstant kMSDmols = "F11;F12;F113;HCFC22;HCFC141b;HCFC142b;HFC134A;HFC152A;HFC227ea;HFC365mfc;OCS;CH3CCl3;CH2Cl2;C2Cl4;h1211;h2402;CH3Br;CH3Cl;"
 // added PERSEUS 190624, added HFOs 201028
-strconstant kPERSEUSmols = "h1301;HFC125;HFC143a;HFC32;C2H6;C3H8;CF4;HFC236fa;NF3;PFC116;SO2F2;HFO1234yf;HFO1234ze;"
+strconstant kPERSEUSmols = "h1301;HFC125;HFC143a;HFC32;C2H6;C3H8;CF4;HFC236fa;NF3;PFC116;SO2F2;"  // HFO1234yf;HFO1234ze;" removed 210930
 strconstant kMSDcatsmols = "F11;F113;HCFC22;HCFC142b;COS;CH3CCl3;h1211;CH3Br;CH3Cl;"
 
 // HATS sampling stations
 strconstant kHATSsites = "alt;brw;lef;nwr;kum;mlo;smo;cgo;psa;spo;hfm;mhd;thd;ush;sum;"  // changed tdf to ush 190609
 
 
-Menu "GMD_FTP"
+Menu "GML_FTP"
 	"(in situ data"
 	"Load RITS Data"
 	"Load CATS Data"
@@ -40,8 +41,6 @@ Menu "GMD_FTP"
 	"-"
 	"(Combined Data"
 	"Load Combined Data"
-	"-"
-	"Remove Displayed Graphs"
 end
 
 function LoadRITSdata([mol, freq, useDF, plot])
@@ -82,7 +81,7 @@ function LoadRITSdata([mol, freq, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kRITSmols
-		DoPrompt "Load RITS data from GMD ftp site", mol, freq, useDF, plot
+		DoPrompt "Load RITS data from GML ftp site", mol, freq, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -140,7 +139,7 @@ function LoadCATSdata([mol, freq, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kCATSmols
-		DoPrompt "Load CATS data from GMD ftp site", mol, freq, useDF, plot
+		DoPrompt "Load CATS data from GML ftp site", mol, freq, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -195,7 +194,7 @@ function LoadCombinedData([mol, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kCOMBmols
-		DoPrompt "Load HATS combined data from GMD ftp site", mol, useDF, plot
+		DoPrompt "Load HATS combined data from GML ftp site", mol, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -248,7 +247,7 @@ function LoadOldGCdata([mol, freq, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kOLDGCmols
-		DoPrompt "Load OldGC data from GMD ftp site", mol, freq, useDF, plot
+		DoPrompt "Load OldGC data from GML ftp site", mol, freq, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -303,7 +302,7 @@ function LoadOTTOdata([mol, freq, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kOTTOmols
-		DoPrompt "Load OTTO data from GMD ftp site", mol, freq, useDF, plot
+		DoPrompt "Load OTTO data from GML ftp site", mol, freq, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -328,9 +327,9 @@ function LoadOTTOdata([mol, freq, useDF, plot])
 		// filter some very low CCl4 data at PSA.  140430 
 		if (cmpstr(mol, "CCl4")==0)
 			wave MM = CCl4ottoSUMm
-			lowchop(MM, 60)
+			MM = SelectNumber(MM <= 60, MM, NaN)
 			wave MM = CCl4ottoPSAm
-			lowchop(MM, 60)
+			MM = SelectNumber(MM <= 60, MM, NaN)
 		endif
 	endif
 			
@@ -370,7 +369,7 @@ function LoadMSDdata([mol, freq, useDF, plot])
 	if (ParamIsDefault(mol))
 		mol=Smol
 		Prompt mol, "Which molecule?", popup, kMSDmols+";"+kPERSEUSmols
-		DoPrompt "Load MSD flask data from GMD ftp site", mol, freq, useDF, plot
+		DoPrompt "Load MSD flask data from GML ftp site", mol, freq, useDF, plot
 		if (V_flag)
 			return 0
 		endif
@@ -408,7 +407,7 @@ function ClipLoader(prog, mol, freq)
 	string prog, mol, freq
 
 	Variable i
-	String urlStr = GMD_HATS_FTPurl(prog, mol, freq)
+	String urlStr = GML_HATS_FTPurl(prog, mol, freq)
 	String file, files = ReturnFilesInFTPfolder(urlStr)
 	String site, Tstr, response = ""
 	
@@ -446,7 +445,7 @@ function ClipLoader_MSD(mol, freq)
 
 	Variable i
 	NVAR PR1 = root:G_perseus
-	String urlStr = GMD_HATS_FTPurl("MSD", mol, freq)
+	String urlStr = GML_HATS_FTPurl("MSD", mol, freq)
 	String file, files = ReturnFilesInFTPfolder(urlStr), matched_file
 	String Tstr, response = ""
 	
@@ -507,7 +506,7 @@ function ClipLoader_Comb(mol)
 	string mol
 
 	Variable i
-	String urlStr = GMD_HATS_FTPurl("combined", mol, "")
+	String urlStr = GML_HATS_FTPurl("combined", mol, "")
 	String file, files = ReturnFilesInFTPfolder(urlStr)
 	String Tstr, response = ""
 
@@ -520,10 +519,10 @@ function ClipLoader_Comb(mol)
 	
 	string InsPre = "HATS"
 	if (cmpstr(mol, "N2O")==0)
-		InsPre = "GMD"
+		InsPre = "GML"
 	endif
 	if (cmpstr(mol, "SF6")==0)
-		InsPre = "GMD"
+		InsPre = "GML"
 	endif
 	
 	for(i=0; i<ItemsInList(files); i += 1)
@@ -603,7 +602,7 @@ end
 			Note sd, "From file: " + file
 			Note timeM, "From file: " + file
 		
-			timeM = decday2secs(dec)
+			timeM = decimalday2secs(dec)
 			SetScale d 0,0,"dat", timeM
 			
 			if (Gplot == 2)
@@ -675,7 +674,7 @@ function MSDsplit_Sites(mol, file)
 			mr = SelectNumber(mr == 0.0, mr, nan)		// some MSD data is at 0.0?  GSD 150628 
 			mr = SelectNumber(mr < -10, mr, nan)			// set negative numbers to nan
 		
-			timeM = decday2secs(dec)
+			timeM = decimalday2secs(dec)
 			SetScale d 0,0,"dat", timeM
 			
 			if (Gplot == 2)
@@ -728,7 +727,7 @@ function MSDsplit_Global(mol, file)
 		Note GL, "From file: " + file
 		Note timeG, "From file: " + file
 		
-		timeG = decday2secs(dec)
+		timeG = decimalday2secs(dec)
 		SetScale d 0,0,"dat", timeG
 		
 		if (Gplot == 2)
@@ -758,7 +757,7 @@ function GlobalClipLoader(prog, mol, freq)
 	string prog, mol, freq
 
 	Variable i
-	String urlStr = GMD_HATS_FTPurl(prog, mol, freq)
+	String urlStr = GML_HATS_FTPurl(prog, mol, freq)
 	String file, files = ReturnFilesInFTPfolder(urlStr)
 	String Tstr, response = ""
 	
@@ -816,7 +815,7 @@ function GlobalClipLoader(prog, mol, freq)
 end
 
 // function constructs a ftp url 
-function/S GMD_HATS_FTPurl(prog, mol, freq)
+function/S GML_HATS_FTPurl(prog, mol, freq)
 	string prog, mol, freq
 
 	string baseurl = "ftp://ftp.cmdl.noaa.gov/hats/", url = ""
@@ -1037,9 +1036,20 @@ function /S ReturnFilesInFTPfolder(url)
 
 	// cleanup
 	Killwaves files
-	bat("Killwaves /Z @", "wave*")
+	delete_wavelist(wavelist("wave*", ";", ""))
 		
 	return filelst
+end
+
+function delete_wavelist(listofwaves)
+	string listofwaves
+	
+	variable i
+	Wave/WAVE wvs = ListToWaveRefWave(listofwaves, 0)
+	for(i=0; i<numpnts(wvs); i+=1)
+		Wave w = wvs[i]
+		Killwaves /Z w
+	endfor
 end
 
 Function QuickFigure(m, t, site, mol, sub, prog)
@@ -1059,4 +1069,13 @@ Function QuickFigure(m, t, site, mol, sub, prog)
 	
 end
 
+// code from macros-geoff
+function/d decimalday2secs(dec)
+	variable /d dec
+
+	variable currYearLP = (dec != 2000) ? (mod(floor(dec),4) == 0) : 0
+	variable secs = (365 + currYearLP) * 86400
+	
+	return Date2secs(floor(dec), 1, 1) + (dec - floor(dec)) * secs
+end
 
