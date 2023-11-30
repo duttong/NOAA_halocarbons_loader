@@ -1,6 +1,6 @@
 <h1>NOAA Global Monitoring Laboratory (GML) Halocarbons (and a few other gases) Data Loader</h1>
 
-<p>Simple methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://www.esrl.noaa.gov/gmd/aftp/hats/</p>
+<p>Simple methods for loading NOAA/GML halocarbon data from the NOAA/GML FTP site located at: https://gml.noaa.gov/aftp/data/hats/</p>
 
 <p>The current list of gases available are: C2Cl4, C2H2, C2H6, C3H8, CCl4, CF4, CH2Cl2, CH3Br, CH3CCl3, CH3Cl, F11, F113,
  F114, F115, F12, F13, HCFC123, HCFC124, HCFC133a, HCFC141b, HCFC142b, HCFC22, HFC125, HFC134a, HFC143a, HFC152a, HFC227ea,
@@ -88,3 +88,7 @@ plt.show()
 df.xs('brw').mf.plot()
 plt.show()
 ```
+
+
+<h3>Disclaimer</h3>
+<p>This repository is a scientific product and is not official communication of the National Oceanic and Atmospheric Administration, or the United States Department of Commerce. All NOAA GitHub project code is provided on an ‘as is’ basis and the user assumes responsibility for its use. Any claims against the Department of Commerce or Department of Commerce bureaus stemming from the use of this GitHub project will be governed by all applicable Federal law. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the Department of Commerce. The Department of Commerce seal and logo, or the seal and logo of a DOC bureau, shall not be used in any manner to imply endorsement of any commercial product or activity by DOC or the United States Government.</p>
