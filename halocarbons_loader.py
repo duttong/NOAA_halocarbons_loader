@@ -230,7 +230,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
 class MSDs(halocarbon_urls.HATS_MSD_URLs):
     """ More info about the flask program can be found here:
-        https://www.esrl.noaa.gov/gmd/hats/flask/flasks.html """
+        https://gml.noaa.gov/hats/flask/flasks.html """
 
     def __init__(self, verbose=True):
         super().__init__()
@@ -387,7 +387,7 @@ class insitu(halocarbon_urls.insitu_URLs):
 class Flasks(halocarbon_urls.Flask_GCECD_URLs):
     """ Class for loading Flask data from the GML FTP server.
         More info about the flask program can be found here:
-        https://www.esrl.noaa.gov/gmd/hats/flask/flasks.html """
+        https://gml.noaa.gov/hats/flask/flasks.html """
 
     def __init__(self, verbose=True, prog='Otto'):
         super().__init__(prog)
