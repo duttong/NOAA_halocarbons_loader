@@ -12,13 +12,15 @@ class HATS_MSD_URLs:
     def msd_urls(self):
         """ urls for GML's MSD flask measurements current as of 20210112
             Note, these are steel and glass flasks from the halocarbon network and
-            does not include PFPs. """
+            does not include PFPs. 
+            
+            Updated urls to include the 2010 sting in the file name. 20231130 """
         u = {}
 
         # CFCs
-        u['F11'] = f'{basehttp}/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask.txt'
+        u['F11'] = f'{basehttp}/cfcs/cfc11/flasks/GCMS/CFC11b_GCMS_flask_2010.txt'
         u['F113'] = f'{basehttp}/cfcs/cfc113/flasks/GCMS/CFC113_GCMS_flask.txt'
-        u['F12'] = f'{basehttp}/cfcs/cfc12/flasks/GCMS/CFC12_GCMS_flask.txt'
+        u['F12'] = f'{basehttp}/cfcs/cfc12/flasks/GCMS/CFC12_GCMS_flask_2010.txt'
 
         # halons
         u['h1211'] = f'{basehttp}/halons/flasks/HAL1211_GCMS_flask.txt'
