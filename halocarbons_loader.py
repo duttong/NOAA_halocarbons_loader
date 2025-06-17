@@ -13,6 +13,8 @@
     The 'freq' key word is short for measurement frequence. All programs return
     monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the
     in situ measurement programs.
+    
+    UPDATED: 2025-06-17 for Python 3.10+ compatibility
 """
 
 import pandas as pd
@@ -120,6 +122,10 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         """ Add lat, lon, and elev based on data in the self.gml_sites dataframe """
         df = df_org.copy().reset_index()
         for site in df.site.unique():
+            if site == 'mlo_pfp':
+                site = 'mlo'
+            elif site == 'mko_pfp':
+                site = 'mko'
             lat = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lat.values[0]
             lon = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lon.values[0]
             elev = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].elev.values[0]
@@ -187,17 +193,24 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         if 'mf' in sub_df.columns:
             # print(f'{method} gap fill at {site}')
             if method == 'seasonal':
-                sub_df = gap.robust_seasonal(sub_df, forecast=True)
+                gf = gap.seasonal(sub_df, forecast_periods=12)
+                gf['mf'] = gf['mf_filled']
+                gf.drop(columns=['mf_filled'], axis=1, inplace=True)
             elif method == 'linear':
-                sub_df = gap.linear(sub_df)
+                gf = gap.linear(sub_df)
+                gf['mf'] = gf['gf']
+                gf['sd'] = gf['gfsd']
+                gf.drop(columns=['gf', 'gfsd'], axis=1, inplace=True)
             else:
                 pass
-            sub_df['mf'] = sub_df['gf']
-            sub_df['sd'] = sub_df['gfsd']
-            sub_df.drop(['gf', 'gfsd'], axis=1, inplace=True)
-        sub_df.rename_axis('date', inplace=True)
-        sub_df['site'] = site
-        return sub_df
+            
+            df_merged = gf.join(sub_df.drop(columns=['mf']), how='left')
+            to_interp = sub_df.columns.difference(['mf'])
+            df_merged[to_interp] = df_merged[to_interp].interpolate(method='time')
+
+        df_merged.rename_axis('date', inplace=True)
+        df_merged['site'] = site
+        return df_merged
 
     def multi_instrument_dataframe(self, list_dfs):
         """ Create a synced dataframe from a list of measurement program
@@ -255,18 +268,33 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         if type == 'GCMS':
             msd = pd.read_csv(filename, sep='\\s+', header=1,
                 names=['site', 'dec_date', 'yyymmdd', 'hhmmss', 'wind_dir', 'wind_spd', 'mf', 'sd'],
-                parse_dates={'date': [2, 3]},
-                index_col='date', na_values=['nd', '0.0'])
+                na_values=['nd', '0.0'])
+            msd['inst'] = 'M3'
+
+            msd['date'] = pd.to_datetime(
+                msd['yyymmdd'].astype(str) + msd['hhmmss'].astype(str),
+                format='%Y%m%d%H%M',
+                errors='coerce'
+            )
+
+            # Make it your index and (optionally) drop the raw columns
+            msd.set_index('date', inplace=True)
+            msd.drop(columns=['yyymmdd', 'hhmmss'], inplace=True)
             msd['inst'] = 'M3'
 
         else:  # PR1 file type
             msd = pd.read_csv(filename, sep='\\s+', header=1, comment='#',
                 names=['site', 'dec_date', 'yyymmdd', 'hhmm', 'wind_dir', 'wind_spd', 'mf', 'sd', 'flag', 'inst'],
-                parse_dates={'date': [2, 3]},
                 index_col='date', na_values=['nd', '0.0'])
             msd['site'] = msd['site'].str.lower()
             # use only background "-" flagged data not ">" or "<"
             msd = msd.loc[msd.flag == '-']
+
+            msd['date'] = pd.to_datetime(
+                msd['yyymmdd'].astype(str) + msd['hhmm'].astype(str),
+                format='%Y%m%d%H%M',
+                errors='coerce'
+            )
 
         msd.reset_index(inplace=True)
         self.sites = msd['site'].unique()
@@ -312,34 +340,69 @@ class insitu(halocarbon_urls.insitu_URLs):
             print(f'File URL: {url}')
 
         if freq == 'monthly':
-            df = pd.read_csv(url, delim_whitespace=True, comment='#',
-                parse_dates={'date': [0, 1]}, infer_datetime_format=True,
-                index_col='date')
+            df = pd.read_csv(url, sep='\s+', comment='#')            
+            col1, col2 = df.columns[:2]
+            
+            df['date'] = pd.to_datetime(
+                df[col1].astype(str) +      # YYYY
+                df[col2].astype(str),       # MM
+                format='%Y%m',
+                errors='coerce'
+            )
+            df.set_index('date', inplace=True)
+            df.drop(columns=[col1, col2], inplace=True)  # drop the date columns
 
             # rename columns
             if df.shape[1] == 3:
                 df.columns = ['mf', 'sd', 'n']
             else:
-                df.columns = ['mf', 'unc', 'sd', 'n']
+                df.columns = ['mf', 'unc', 'sd', 'n']                
 
         elif freq == 'daily':
-            df = pd.read_csv(url, delim_whitespace=True, comment='#',
-                parse_dates={'date': [0, 1, 2]}, infer_datetime_format=True,
-                index_col='date')
-            df.columns = ['mf', 'unc', 'n']      # rename columns
+            df = pd.read_csv(url, sep='\s+', comment='#')            
+            col1, col2, col3 = df.columns[:3]
+            
+            df['date'] = pd.to_datetime(
+                df[col1].astype(str) +      # YYYY
+                df[col2].astype(str) +      # MM
+                df[col3].astype(str),       # DD
+                format='%Y%m%d',
+                errors='coerce'
+            )
+            df.set_index('date', inplace=True)
+            df.drop(columns=[col1, col2, col3], inplace=True)  # drop the date columns
+            df.columns = ['mf', 'unc', 'n']
+
 
         elif freq == 'hourly':
-            _date_parser = lambda x: datetime.strptime(x, "%Y %m %d %H %M")
-            df = pd.read_csv(url, delim_whitespace=True, comment='#',
-                na_values=['Nan'],  # pandas use 'nan', added 'Nan' to na_values
-                parse_dates={'date': [0, 1, 2, 3, 4]},
-                date_parser=_date_parser,
-                index_col='date')
-            df.columns = ['mf', 'unc']
+            dtype = {
+                'year':   'Int64',
+                'month':  'Int64',
+                'day':    'Int64',
+                'hour':   'Int64',
+                'minute': 'Int64',
+                'mf':     'float64',
+                'unc':    'float64',
+            }
+            df = pd.read_csv(
+                url,
+                sep='\s+',
+                comment='#',
+                na_values=['Nan'],
+                header=1,
+                names=['year','month','day','hour','minute','mf','unc'],
+                dtype=dtype,
+                low_memory=False
+            )
+
+            df['date'] = pd.to_datetime(
+                df[['year','month','day','hour','minute']]
+            )
+
+            df.set_index('date', inplace=True)
+            df = df[['mf','unc']]            # keep only your data columns
 
         df['site'] = site       # add site column
-
-        # sleep(1)    # slow down, don't hammer the FTP site with requests
 
         return df
 
@@ -402,19 +465,19 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
             print(f'File URL: {url}')
 
         if freq == 'monthly':
-            df = pd.read_csv(url, delim_whitespace=True, comment='#',
-                parse_dates={'date': [0, 1]}, infer_datetime_format=True,
-                index_col='date')
-            df.columns = ['mf', 'sd', 'n']
+            df = pd.read_csv(url, sep='\s+', comment='#')            
+            col1, col2 = df.columns[:2]
+            
+            df['date'] = pd.to_datetime(
+                df[col1].astype(str) +      # YYYY
+                df[col2].astype(str),       # MM
+                format='%Y%m',
+                errors='coerce'
+            )
+            df.set_index('date', inplace=True)
+            df.drop(columns=[col1, col2], inplace=True)  # drop the date columns
 
-        elif freq == 'hourly':
-            _date_parser = lambda x: datetime.strptime(x, "%Y %m %d %H %M")
-            df = pd.read_csv(url, delim_whitespace=True, comment='#',
-                na_values=['Nan'],  # pandas use 'nan', added 'Nan' to na_values
-                parse_dates={'date': [0, 1, 2, 3, 4]},
-                date_parser=self._date_parser,
-                index_col='date')
-            df.columns = ['mf', 'unc']
+            df.columns = ['mf', 'sd', 'n']
 
         df['site'] = site       # add site column
 
@@ -466,13 +529,23 @@ class Combined(halocarbon_urls.Combined_Data_URLs):
             print(f'File URL: {filename}')
             print('Please consult the header in the file listed above for PI and contact information.')
 
-        df = pd.read_csv(filename, delim_whitespace=True, comment='#',
-            parse_dates={'date': [0, 1]}, infer_datetime_format=True,
-            index_col='date')
+        df = pd.read_csv(filename, sep='\s+', comment='#')
+
+        col1, col2 = df.columns[:2]
+        # convert the first two columns to a datetime index
+        df['date'] = pd.to_datetime(
+            df[col1].astype(str) +      # YYYY
+            df[col2].astype(str),       # MM
+            format='%Y%m',
+            errors='coerce'
+        )
+        df.set_index('date', inplace=True)
+        df.drop(columns=[col1, col2], inplace=True)  # drop the date columns
 
         # shorten column names
         df.columns = [x.replace('HATS_', '') for x in df.columns]
         df.columns = [x.replace('GMD_', '') for x in df.columns]
+        df.columns = [x.replace('GML_', '') for x in df.columns]
         df.columns = [x.replace(f'_{gas}', '') for x in df.columns]
         df.columns = [x.replace(f'{gas}_', '') for x in df.columns]
 
