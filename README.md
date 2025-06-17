@@ -16,7 +16,8 @@
 <p>The <strong>freq</strong> keyword is short for measurement frequency. All programs return monthly means or medians. 'freq' can be set to 'daily' or 'hourly' for the in situ measurement programs.</p>
 
 <h3>gapfill</h3>
-<p>When the gapfill keyword is set to True and the frequency of data (freq keyword) is 'monthly', a seasonally interpolation is done to fill any missing data. The dataframe returned will have five columns: mf, sd, model, gf, gfsd. Where the seasonal model is used to gapfill missing data. The gapfilled data is 'gf' in the dataframe.</p>
+<p>When the gapfill keyword is set to True and the frequency of data (freq keyword) is 'monthly', a seasonally interpolation is done to fill any missing data. Any missing data in the mole fraction ('mf') are filled in with a seasonal gap fill model. The 
+model results are returned in 'mf_mod'. The data is also extended 12 months with a model forecast.</p>
 
 <h3>addlocation</h3>
 <p>By default, latitude, longitude, and sample elevation are added to the dataframe. Set
