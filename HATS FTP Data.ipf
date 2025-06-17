@@ -462,7 +462,8 @@ function ClipLoader_MSD(mol, freq)
 	// steps through the file list to find the file that matches the molecule.
 	for(i=0; i<ItemsInList(files); i += 1)
 		file = StringFromList(i, files)
-		if ((strsearch(file, "GCMS_flask.txt", 0) > -1) || (strsearch(file, "MS_flask.txt", 0) > -1))
+		// changed from GCMS_flask.txt to only GCMS_flask. Steve renamed the F11 file to "CFC11b_GCMS_flask_2010.txt" 230413
+		if ((strsearch(file, "GCMS_flask", 0) > -1) || (strsearch(file, "MS_flask.txt", 0) > -1))
 			matched_file = StringByKey(mol, matched, ":", ",")
 			if ((strlen(matched_file) == 0) || (strsearch(file, matched_file, 0) > -1))
 				print urlStr, file, mol
@@ -490,6 +491,10 @@ end
 function ClipLoader_MSDsub_clipped(urlStr, file, mol, freq)
 	string urlStr, file, mol, freq
 
+	// this function is for M3 and not Perseus
+	NVAR PR1 = root:G_perseus
+	PR1 = 0
+	
 	//string response = FetchURL(urlStr+file)
 	string response = GetScrapText()  // use this for manually loading a data file from clipboard
 	response = ReplaceString("\r\n", response, "\r")
