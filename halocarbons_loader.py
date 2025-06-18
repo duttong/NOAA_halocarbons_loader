@@ -119,21 +119,24 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         return df
 
     def add_location(self, df_org):
-        """ Add lat, lon, and elev based on data in the self.gml_sites dataframe """
-        df = df_org.copy().reset_index()
-        for site in df.site.unique():
-            if site == 'mlo_pfp':
-                site = 'mlo'
-            elif site == 'mko_pfp':
-                site = 'mko'
-            lat = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lat.values[0]
-            lon = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].lon.values[0]
-            elev = self.gml_sites.loc[self.gml_sites['site'] == site.upper()].elev.values[0]
-            df.loc[df.site == site, 'lat'] = lat
-            df.loc[df.site == site, 'lon'] = lon
-            df.loc[df.site == site, 'elev'] = elev
-
-        df = df.set_index(['site', 'date'])
+        df = (
+            df_org
+            .copy()
+            .reset_index()
+            # make a new column that uppercases and strips off any "_pfp" suffix
+            .assign(site_lookup=lambda d: d['site']
+                    .str.replace('_pfp$', '', regex=True)
+                    .str.upper())
+            # merge once against your site metadata
+            .merge(
+                self.gml_sites.rename(columns={'site': 'site_lookup'}),
+                on='site_lookup',
+                how='left'
+            )
+            # drop the helper column if you want
+            .drop(columns=['site_lookup'])
+            .set_index(['site', 'date'])
+        )
         return df
 
     def gas_conversion(self, gas):
