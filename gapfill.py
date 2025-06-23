@@ -65,7 +65,6 @@ class Gap_Methods:
         train_idx = pd.date_range(start, last, freq=freq)
         ts_train_full = ts.reindex(train_idx)
         ts_train = ts_train_full.interpolate(method='time')
-        #ts_train = ts_train.dropna()
 
         # 4. Fit Holt–Winters with estimated initialization
         hw = ExponentialSmoothing(

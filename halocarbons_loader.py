@@ -106,7 +106,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                 df.reset_index(inplace=True)
                 df.set_index(['site', 'date'], inplace=True)
                 df.sort_index(inplace=True)
-                print(f'gapfiller took {time()-t0:.1f} seconds')
+                #print(f'gapfiller took {time()-t0:.1f} seconds')
 
         # insert lat, lon, elev into dataframe
         if program not in self.programs_combined and addlocation:
@@ -197,6 +197,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             # print(f'{method} gap fill at {site}')
             if method == 'seasonal':
                 gf = gap.seasonal(sub_df, forecast_periods=12)
+                gf['mf_raw'] = gf['mf']
                 gf['mf'] = gf['mf_filled']
                 gf.drop(columns=['mf_filled'], axis=1, inplace=True)
             elif method == 'linear':
