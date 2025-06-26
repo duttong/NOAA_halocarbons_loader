@@ -25,7 +25,7 @@ class HATS_MSD_URLs:
         # halons
         u['h1211'] = f'{basehttp}/halons/flasks/HAL1211_GCMS_flask.txt'
         u['h2402'] = f'{basehttp}/halons/flasks/Hal2402_GCMS_flask.txt'
-        u['h1301'] = f'{basehttp}/halons/flasks/H-1301_M2&PR1_MS_flask.txt'
+        u['h1301'] = f'{basehttp}/halons/flasks/H-1301_M2_PR1_MS_flask.txt'
 
         # HCFCs
         u['HCFC141b'] = f'{basehttp}/hcfcs/hcfc141b/HCFC141B_GCMS_flask.txt'
@@ -145,39 +145,73 @@ class Combined_Data_URLs:
         u['SF6'] = f'{basehttp}/sf6/combined/GML_global_SF6.txt'
         return u
 
-
 class Flask_GCECD_URLs:
-    """ URLs for Otto and OldGC programs
-        When the FE3 instrument is online. Add to this class. """
+    """Refactored URL builder for Otto, fECD, and OldGC programs"""
+    BASE_URL = basehttp  # ensure basehttp is defined in the module
+
+    # Available sites per program
+    PROGRAM_SITES = {
+        'Otto': ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo'),
+        'fECD': ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'rpb', 'smo', 'ush', 'psa', 'spo'),
+        'OldGC': ('alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo'),
+    }
+
+    # Gas to path mapping and optional override codes
+    GAS_PATHS = {
+        'F11': ('cfcs/cfc11', None),
+        'F12': ('cfcs/cfc12', None),
+        'F113': ('cfcs/cfc113', None),
+        'N2O': ('n2o', None),
+        'SF6': ('sf6', None),
+        'CCl4': ('solvents/CCl4', None),
+        'CH3CCl3': ('solvents/CH3CCl3', 'MC'),
+    }
+
+    # Frequency suffix mapping
+    SUFFIX = {'pairs': 'All', 'monthly': 'MM'}
 
     def __init__(self, prog='Otto'):
-        self.prog = 'Otto' if prog.upper() == 'OTTO' else 'OldGC'
-        if self.prog == 'OldGC':
-            self.sites = ('alt', 'brw', 'cgo', 'nwr', 'mlo', 'smo', 'spo')
+        p = prog.lower()
+        if p == 'otto':
+            self.prog = 'Otto'
+        elif p == 'fecd':
+            self.prog = 'fECD'
         else:
-            self.sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
-        self.gases = list(self.urls('mlo').keys())
+            self.prog = 'OldGC'
+
+        self.sites = self.PROGRAM_SITES[self.prog]
+        # OldGC only has F11, F12, N2O
+        if self.prog == 'OldGC':
+            self.gases = ['F11', 'F12', 'N2O']
+        else:
+            self.gases = list(self.GAS_PATHS.keys())
 
     def urls(self, site, freq='monthly'):
-        """ URL generator for either Otto or OldGC programs """
-        site = site.lower() if self.prog == 'Otto' else site.upper()
-        freq = freq.lower()
-        suffix = {'hourly': 'All', 'monthly': 'MM'}
+        """Generate URLs for a given site and frequency."""
+        # Normalize inputs
+        code_site = site.lower() if self.prog == 'Otto' else site.upper()
+        freq_key = freq.lower()
+        # OldGC only supports monthly
+        if self.prog == 'OldGC':
+            freq_key = 'monthly'
 
-        # OldGC only has monthly means
-        freq = 'monthly' if self.prog == 'OldGC' else freq
+        suffix = self.SUFFIX[freq_key]
+        urls = {}
+        for gas in self.gases:
+            path, override_code = self.GAS_PATHS[gas]
+            # file extension
+            ext = 'txt' if self.prog == 'fECD' else 'dat'
 
-        u = {}
-        # OldGC gases
-        u['F11'] = f'{basehttp}/cfcs/cfc11/flasks/{self.prog}/{freq}/{site}_F11_{suffix[freq]}.dat'
-        u['F12'] = f'{basehttp}/cfcs/cfc12/flasks/{self.prog}/{freq}/{site}_F12_{suffix[freq]}.dat'
-        u['N2O'] = f'{basehttp}/n2o/flasks/{self.prog}/{freq}/{site}_N2O_{suffix[freq]}.dat'
-
-        # addtional gases measured by Otto
-        if self.prog == 'Otto':
-            u['F113'] = f'{basehttp}/cfcs/cfc113/flasks/{self.prog}/{freq}/{site}_F113_{suffix[freq]}.dat'
-            u['SF6'] = f'{basehttp}/sf6/flasks/{self.prog}/{freq}/{site}_SF6_{suffix[freq]}.dat'
-            u['CCl4'] = f'{basehttp}/solvents/CCl4/flasks/{self.prog}/{freq}/{site}_CCl4_{suffix[freq]}.dat'
-            u['CH3CCl3'] = f'{basehttp}/solvents/CH3CCl3/flasks/{self.prog}/{freq}/{site}_MC_{suffix[freq]}.dat'
-
-        return u
+            if self.prog == 'fECD':
+                # fECD files use NOAAflaskECD naming convention
+                urls[gas] = (
+                    f"{self.BASE_URL}/{path}/flasks/{self.prog}/{freq_key}/"
+                    f"{gas}_{code_site}_NOAAflaskECD_{suffix}.{ext}"
+                )
+            else:
+                file_code = override_code or gas
+                urls[gas] = (
+                    f"{self.BASE_URL}/{path}/flasks/{self.prog}/{freq_key}/"
+                    f"{code_site}_{file_code}_{suffix}.{ext}"
+                )
+        return urls

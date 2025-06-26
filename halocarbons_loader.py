@@ -42,7 +42,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         self.bk_sites = ('alt', 'sum', 'brw', 'cgo', 'kum', 'mhd', 'mlo', 'nwr', 'thd', 'smo', 'ush', 'psa', 'spo')
         self.programs_msd = ('m3', 'pr1', 'msd')
         self.programs_insitu = ('rits', 'cats', 'insitu')
-        self.programs_flaskECD = ('oldgc', 'otto')
+        self.programs_flaskECD = ('oldgc', 'otto', 'fecd')
         self.programs_combined = ('combined', 'combine', 'combo')
 
     def gml_sites(self):
@@ -61,7 +61,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
 
         program = program.lower()
         freq = freq.lower()
-
+        
         if (gas == 'N2O' or gas == 'CCl4') & (program == 'msd'):
             print(f'The MSD program does not measure {gas} the returned cats_results are from the Combined Data Set.')
             program = 'combined'
@@ -71,7 +71,7 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
             if freq == 'pairs':
                 df = hats.pairs(gas)
             else:
-                df = hats.monthly(gas, gapfill=gapfill)
+                df = hats.monthly(gas)
 
         elif program in self.programs_insitu:
             hats = insitu(verbose=verbose, prog=program)
@@ -191,29 +191,48 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
         plt.show()
 
     def gapfiller(self, df, site, method='seasonal'):
+        """
+        Fill gaps in the 'mf' series for a single site, then
+        re-attach the other columns and time-interpolate them.
+        """
         gap = Gap_Methods()
         sub_df = df.loc[site]
-        if 'mf' in sub_df.columns:
-            # print(f'{method} gap fill at {site}')
-            if method == 'seasonal':
-                gf = gap.seasonal(sub_df, forecast_periods=12)
-                gf['mf_raw'] = gf['mf']
-                gf['mf'] = gf['mf_filled']
-                gf.drop(columns=['mf_filled'], axis=1, inplace=True)
-            elif method == 'linear':
-                gf = gap.linear(sub_df)
-                gf['mf'] = gf['gf']
-                gf['sd'] = gf['gfsd']
-                gf.drop(columns=['gf', 'gfsd'], axis=1, inplace=True)
-            else:
-                pass
-            
-            df_merged = gf.join(sub_df.drop(columns=['mf']), how='left')
-            to_interp = sub_df.columns.difference(['mf'])
-            df_merged[to_interp] = df_merged[to_interp].interpolate(method='time')
 
+        # If there is no 'mf' in this slice, just return it unmodified:
+        if 'mf' not in sub_df.columns:
+            result = sub_df.copy()
+            result.rename_axis('date', inplace=True)
+            result['site'] = site
+            return result
+
+        # 1) do the seasonal vs. linear gap‐fill
+        if method == 'seasonal':
+            gf = gap.seasonal(sub_df, forecast_periods=12)
+            gf['mf_raw'] = gf['mf']
+            gf['mf']     = gf['mf_filled']
+            gf.drop(columns=['mf_filled'], inplace=True)
+        elif method == 'linear':
+            gf = gap.linear(sub_df)
+            gf['mf'] = gf['gf']
+            gf['sd'] = gf['gfsd']
+            gf.drop(columns=['gf', 'gfsd'], inplace=True)
+        else:
+            raise ValueError(f"Unknown gap‐fill method: {method}")
+
+        # 2) re-join the non‐mf columns from the original
+        df_merged = gf.join(sub_df.drop(columns=['mf']), how='left')
+
+        # 3) infer proper dtypes (so interpolate has numeric dtypes, not object)
+        df_merged = df_merged.infer_objects(copy=False)
+
+        # 4) interpolate all of the original sub_df columns (except 'mf')
+        to_interp = sub_df.columns.difference(['mf'])
+        df_merged[to_interp] = df_merged[to_interp].interpolate(method='time')
+
+        # 5) final housekeeping
         df_merged.rename_axis('date', inplace=True)
         df_merged['site'] = site
+
         return df_merged
 
     def multi_instrument_dataframe(self, list_dfs):
@@ -289,14 +308,14 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         else:  # PR1 file type
             msd = pd.read_csv(filename, sep='\\s+', header=1, comment='#',
                 names=['site', 'dec_date', 'yyymmdd', 'hhmm', 'wind_dir', 'wind_spd', 'mf', 'sd', 'flag', 'inst'],
-                index_col='date', na_values=['nd', '0.0'])
+                na_values=['nd', '0.0'])
             msd['site'] = msd['site'].str.lower()
             # use only background "-" flagged data not ">" or "<"
             msd = msd.loc[msd.flag == '-']
 
             msd['date'] = pd.to_datetime(
                 msd['yyymmdd'].astype(str) + msd['hhmm'].astype(str),
-                format='%Y%m%d%H%M',
+                format='%Y%m%d%H:%M',
                 errors='coerce'
             )
 
@@ -305,22 +324,37 @@ class MSDs(halocarbon_urls.HATS_MSD_URLs):
         msd.set_index(['site', 'date'], inplace=True)
         return msd
 
-    def monthly(self, gas, gapfill=False):
-        """ Monthly means calculated from flask pair means """
-        df = self.pairs(gas)
+    def monthly(self, gas):
+        """
+        Compute monthly means from flask pair means for the specified gas.
 
-        # df is blank because MSD program doesn't measure the gas selected.
-        if df.shape[0] == 0:
+        Parameters
+        ----------
+        gas : str
+            Gas species to compute monthly means for.
+
+        Returns
+        -------
+        pd.DataFrame
+            Monthly means indexed by site (level 0) and month-start date (level 1).
+        """
+        df = self.pairs(gas)
+        if df.empty:
             return df
 
-        # A monthly mean of these columns doesn't make sense. Dropping them.
-        df = df.drop(['dec_date', 'wind_dir', 'wind_spd', 'flag', 'inst'], axis=1, errors='ignore')
+        # drop columns that don’t make sense to average
+        cols = ['dec_date', 'wind_dir', 'wind_spd', 'flag', 'inst', 'yyymmdd', 'hhmm', 'index']
+        df = df.drop(columns=cols, errors='ignore')
 
-        # resample pandas multiindex by site
-        df = df.reset_index('site').groupby('site').resample('MS').mean().reset_index().set_index(['site', 'date'])
-
-        return df
-
+        # group by site (index level 0) and resample the date index (level 1)
+        monthly = (
+            df
+            .groupby(level='site')
+            .resample('MS', level='date')
+            .mean()
+        )
+        
+        return monthly
 
 class insitu(halocarbon_urls.insitu_URLs):
     """ Class for loading CATS data from the GML FTP server.
@@ -456,7 +490,7 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
         More info about the flask program can be found here:
         https://gml.noaa.gov/hats/flask/flasks.html """
 
-    def __init__(self, verbose=True, prog='Otto'):
+    def __init__(self, verbose=True, prog='fECD'):
         super().__init__(prog)
         self.verbose = verbose
         self.mp_processes = 6       # number of processors to use for FTP download
@@ -466,10 +500,10 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
         url = urls[gas]
 
         if self.verbose:
-            print(f'File URL: {url}')
+            print(f'{self.prog} file URL: {url}')
 
         if freq == 'monthly':
-            df = pd.read_csv(url, sep='\s+', comment='#')            
+            df = pd.read_csv(url, sep='\s+', comment='#')
             col1, col2 = df.columns[:2]
             
             df['date'] = pd.to_datetime(
@@ -480,12 +514,35 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
             )
             df.set_index('date', inplace=True)
             df.drop(columns=[col1, col2], inplace=True)  # drop the date columns
+            
+            if self.prog == 'fECD':
+                df.columns = ['mf', 'sd', 'n', 'inst']
+            else:
+                df.columns = ['mf', 'sd', 'n']
 
-            df.columns = ['mf', 'sd', 'n']
+        elif freq == 'pairs':
+            df = pd.read_csv(url, sep='\s+', comment='#')
+
+            col1, col2, col3, col4, col5 = df.columns[:5]
+            df['date'] = pd.to_datetime(
+                df[col1].astype(str) +      # YYYY
+                df[col2].astype(str) +      # MM
+                df[col3].astype(str) +      # DD
+                df[col4].astype(str) +      # HH
+                df[col5].astype(str),       # MM
+                format='%Y%m%d%H%M',
+                errors='coerce'
+            )
+            df.set_index('date', inplace=True)
+            df.drop(columns=[col1, col2, col3, col4, col5], inplace=True)  # drop the date columns
+
+            if self.prog == 'fECD':
+                df.columns = ['mf', 'sd', 'pid', 'type', 'inst']
+            else:
+                df.columns = ['mf', 'sd', 'n']
+
 
         df['site'] = site       # add site column
-
-        # sleep(1)    # slow down, don't hammer the FTP site with requests
 
         return df
 
@@ -506,8 +563,11 @@ class Flasks(halocarbon_urls.Flask_GCECD_URLs):
             # step through each insitu site.
             res = p.starmap(self.flask_csv_reader, [(gas, freq, s) for s in self.sites])
 
+        # for each sub-DataFrame, drop any column that is 100% NaN
+        cleaned = [df_.dropna(axis=1, how='all') for df_ in res]
+        
         # create a single dataframe
-        df = pd.concat(res)
+        df = pd.concat(cleaned)
         df.reset_index(inplace=True)
         self.sites = df['site'].unique()
         df.set_index(['site', 'date'], inplace=True)
