@@ -35,11 +35,11 @@ class HATS_MSD_URLs:
         # HFCs
         u['HFC152a'] = f'{basehttp}/hfcs/hf152a_GCMS_flask.txt'
         u['HFC134a'] = f'{basehttp}/hfcs/hfc134a_GCMS_flask.txt'
-        u['HFC143a'] = f'{basehttp}/hfcs/HFC-143a_M2&PR1_MS_flask.txt'
+        u['HFC143a'] = f'{basehttp}/hfcs/HFC-143a_M2_PR1_MS_flask.txt'
         u['HFC365mfc'] = f'{basehttp}/hfcs/HFC-365mfc_GCMS_flask.txt'
-        u['HFC32'] = f'{basehttp}/hfcs/HFC-32_M2&PR1_MS_flask.txt'
+        u['HFC32'] = f'{basehttp}/hfcs/HFC-32_M2_PR1_MS_flask.txt'
         u['HFC227ea'] = f'{basehttp}/hfcs/HFC-227ea_GCMS_flask.txt'
-        u['HFC125'] = f'{basehttp}/hfcs/HFC-125_M2&PR1_MS_flask.txt'
+        u['HFC125'] = f'{basehttp}/hfcs/HFC-125_M2_PR1_MS_flask.txt'
 
         # Methylhalides
         u['CH3Br'] = f'{basehttp}/methylhalides/ch3br/flasks/CH3BR_GCMS_flask.txt'
@@ -69,12 +69,12 @@ class HATS_MSD_URLs:
         u['HCFC123'] = f'{basehttp}/PERSEUS/HCFC-123_PR1_MS_flask.txt'
         u['HCFC124'] = f'{basehttp}/PERSEUS/HCFC-124_PR1_MS_flask.txt'
         u['HCFC133a'] = f'{basehttp}/PERSEUS/HCFC-133a_PR1_MS_flask.txt'
-        u['HFC125'] = f'{basehttp}/PERSEUS/HFC-125_PR1_MS_flask.txt'
+        #u['HFC125'] = f'{basehttp}/PERSEUS/HFC-125_PR1_MS_flask.txt'
         # use the M2 + PR1 file for HFC143a
         # u['HFC143a'] = f'{basehttp}/PERSEUS/HFC-143a_PR1_MS_flask.txt'
         # removed HFC23
         # u['HFC23'] = f'{basehttp}/PERSEUS/HFC-23_PR1_MS_flask.txt'
-        u['HFC32'] = f'{basehttp}/PERSEUS/HFC-32_PR1_MS_flask.txt'
+        # u['HFC32'] = f'{basehttp}/PERSEUS/HFC-32_PR1_MS_flask.txt'
         u['HFO1234yf'] = f'{basehttp}/PERSEUS/HFO-1234yf_PR1_MS_flask.txt'
         u['HFO1234ze'] = f'{basehttp}/PERSEUS/HFO-1234ze_PR1_MS_flask.txt'
         u['PFC218'] = f'{basehttp}/PERSEUS/PFC-218_PR1_MS_flask.txt'
