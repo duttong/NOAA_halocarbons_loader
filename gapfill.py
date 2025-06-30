@@ -53,7 +53,6 @@ class Gap_Methods:
         """
         # 1. Original series
         ts = df[col]
-        #start, last = ts.index.min(), ts.index.max()
         start = ts.first_valid_index()
         last  = ts.last_valid_index()
 
@@ -67,16 +66,22 @@ class Gap_Methods:
         ts_train = ts_train_full.interpolate(method='time')
 
         # 4. Fit Holt–Winters with estimated initialization
-        hw = ExponentialSmoothing(
-            ts_train,
-            trend='add',
-            seasonal='add',
-            seasonal_periods=seasonal_periods,
-            initialization_method='estimated'
-        ).fit(optimized=True)
+        try:
+            hw = ExponentialSmoothing(
+                ts_train,
+                trend='add',
+                seasonal='add',
+                seasonal_periods=seasonal_periods,
+                initialization_method='estimated'
+            ).fit(optimized=True)
 
-        # 5. Predict over full span (including future)
-        hw_pred = hw.predict(start=full_idx[0], end=full_idx[-1])
+            # 5. Predict over full span (including future)
+            hw_pred = hw.predict(start=full_idx[0], end=full_idx[-1])
+
+        except ValueError:
+            # fall back to linear if there was an error with ExponentialSmoothing
+            hw = self.linear(df.reindex(train_idx))
+            hw_pred = np.nan
 
         # 6. Assemble output DataFrame
         out = pd.DataFrame({
