@@ -154,7 +154,8 @@ class HATS_Loader(halocarbon_urls.HATS_MSD_URLs):
                 '123': 'HCFC123', '124': 'HCFC124', '133A': 'HCFC133a', '133': 'HCFC133a',
                 '141B': 'HCFC141b', '141': 'HCFC141b', '142B': 'HCFC142b', '142': 'HCFC142b',
                 '22': 'HCFC22', '125': 'HFC125', '134A': 'HFC134a', '134': 'HFC134a',
-                '143A': 'HFC143a', '143': 'HFC143a', '152A': 'HFC152a', '152': 'HFC152a'}
+                '143A': 'HFC143a', '143': 'HFC143a', '152A': 'HFC152a', '152': 'HFC152a',
+                'PCE': 'C2Cl4'}
 
         # first compare to substitutions
         if gas.upper() in subs:

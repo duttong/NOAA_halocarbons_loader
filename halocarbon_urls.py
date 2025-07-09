@@ -61,7 +61,7 @@ class HATS_MSD_URLs:
         u['PFC116'] = f'{basehttp}/PERSEUS/PFC-116_PR1_MS_flask.txt'
         u['SO2F2'] = f'{basehttp}/PERSEUS/SO2F2_PR1_MS_flask.txt'
         u['HFC236fa'] = f'{basehttp}/PERSEUS/HFC-236fa_PR1_MS_flask.txt'
-        u['C2Cl4'] = f'{basehttp}/PERSEUS/C2Cl4_PR1_MS_flask.txt'
+        #u['C2Cl4'] = f'{basehttp}/PERSEUS/C2Cl4_PR1_MS_flask.txt'
         u['C2H2'] = f'{basehttp}/PERSEUS/C2H2_PR1_MS_flask.txt'
         u['F114'] = f'{basehttp}/PERSEUS/CFC-114_PR1_MS_flask.txt'
         u['F115'] = f'{basehttp}/PERSEUS/CFC-115_PR1_MS_flask.txt'
